@@ -81,7 +81,7 @@ export default function SignUp() {
     if (str === undefined) {
       return <Loading />;
     } else {
-      return <Redirect to={`/${str}`} />;
+      return <Redirect to={`/dashboard`} />;
     }
   } else {
     return (
@@ -208,11 +208,11 @@ export default function SignUp() {
                   className={classes.submit}
                   disabled={!dirty}
                 >
-                  {!signup.loading ? "Sign Up" : <Loader />}
+                  {!signup.loading ? "Sign Up" : <Loading size={24} />}
                 </Button>
                 <Grid container justify="flex-end">
                   <Grid item>
-                    <Link href="/login" variant="body2">
+                    <Link href="/" variant="body2">
                       Already have an account? Sign in
                     </Link>
                   </Grid>

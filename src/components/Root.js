@@ -1,6 +1,7 @@
 import Firebase from "firebase";
+import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import { firebaseConfig } from "../firebase";
+import { firebaseConfig } from "../firebase/index";
 import Store from "../redux/store";
 import App from "./app";
 

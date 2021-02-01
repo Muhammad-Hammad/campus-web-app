@@ -1,14 +1,17 @@
-import { Redirect, Route } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 import Signin from "../components/signin";
 import Signup from "../components/signup";
 import ForgotPassword from "../components/forgotPassword";
 import Dashboard from "../components/dashboard";
 import AddJob from "../components/AddJob";
-import ShowJob from "../components/ShowJob";
+import ShowJob from "../components/ShowJobs";
 import Appbar from "../components/appbar";
+import Error from "../components/Error";
+import { useSelector } from "react-redux";
+import Loader from "../components/loader";
 export const ROUTES = [
   {
-    path: "/signin",
+    path: "/",
     exact: true,
     key: "SIGNIN",
     private: false,
@@ -33,17 +36,24 @@ export const ROUTES = [
     exact: true,
     key: "DASHBOARD",
     private: true,
-    component: () => {
-      // verify auth function if false then return to login page
-      return (
-        <Appbar>
-          <Dashboard />
-        </Appbar>
-      );
-    },
+    component: RenderRoutes,
     routes: [
       {
-        path: "/dashboard/AddJob",
+        path: "/dashboard",
+        exact: true,
+        key: "DASHBOARD_ROOT",
+        private: true,
+        component: () => {
+          // verify auth function if false then return to login page
+          return (
+            <Appbar>
+              <Dashboard />
+            </Appbar>
+          );
+        },
+      },
+      {
+        path: "/dashboard/addjob",
         exact: true,
         key: "ADDJOB",
         private: true,
@@ -57,7 +67,7 @@ export const ROUTES = [
         },
       },
       {
-        path: "/dashboard/ShowJob",
+        path: "/dashboard/showjob",
         exact: true,
         key: "SHOWJOB",
         private: true,
@@ -72,16 +82,36 @@ export const ROUTES = [
       },
     ],
   },
+  {
+    path: "*",
+    exact: false,
+    key: "*",
+    private: false,
+    component: () => <Error />,
+  },
 ];
 
 export function RouteWithSubRoutes(route) {
+  const state = useSelector((state) => state.auth);
+  const { verify, login, signup } = state;
   return (
     <Route
       path={route.path}
-      render={(props) => (
-        // pass the sub-routes down to keep nesting
-        <route.component {...props} routes={route.routes} />
-      )}
+      render={(props) => <route.component {...props} routes={route.routes} />}
     />
+  );
+}
+export function RenderRoutes({ routes }) {
+  return (
+    <Switch>
+      {routes.map((route, i) => {
+        console.log(
+          route.key,
+          <RouteWithSubRoutes key={route.key} {...route} />
+        );
+        return <RouteWithSubRoutes key={route.key} {...route} />;
+      })}
+      <Route component={() => <h1>Not Found!</h1>} />
+    </Switch>
   );
 }
