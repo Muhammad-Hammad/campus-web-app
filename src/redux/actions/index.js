@@ -125,10 +125,10 @@ const requestAddJob = () => {
     type: ADDJOB_REQUEST,
   };
 };
-const receiveAddJob = () => {
+const receiveAddJob = (job) => {
   return {
     type: ADDJOB_SUCCESS,
-    payload: {},
+    payload: { job },
   };
 };
 const AddJobError = () => {
@@ -247,4 +247,34 @@ export const detectRole = (UID) => (dispatch) => {
       dispatch(getDataError(error));
     });
 };
-export const addJob = () => (dispatch) => {};
+export const addJob = (title, job, description, uid) => (dispatch) => {
+  dispatch(requestAddJob());
+  const newData = {
+    title,
+    job,
+    description,
+  };
+
+  const newJob = Firebase.database().ref(`/Users/${uid}`).child("Jobs").push()
+    .key;
+  let updates = {};
+  updates[`/Jobs/${newJob}`] = newData;
+
+  Firebase.database()
+    .ref()
+    .update(updates)
+    .then(() => {
+      Firebase.database()
+        .ref(`/Users/${uid}`)
+        .update(updates)
+        .then(() => {
+          dispatch(receiveAddJob(newData));
+        })
+        .catch((error) => {
+          dispatch(AddJobError());
+        });
+    })
+    .catch((error) => {
+      dispatch(AddJobError());
+    });
+};

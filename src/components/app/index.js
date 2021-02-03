@@ -7,7 +7,7 @@ import Loader from "../loader";
 function App() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  let { login, signup, user, verify, getData } = state;
+  let { login, signup, user, verify, getData, Jobs } = state;
   // console.log(verify);
   useEffect(() => {
     dispatch(detectRole(user?.uid));
@@ -15,7 +15,7 @@ function App() {
   // console.log("user", user);
   // console.log("getData", getData);
   let check = Object.keys(user).length === 0 && user.constructor === Object;
-
+  console.log("job", Jobs);
   return (
     <RenderRoutes routes={ROUTES} />
 

@@ -256,7 +256,7 @@ export default function Auth(state = initState, action) {
           success: true,
           errorMsg: "",
         },
-        Jobs: [...state?.Jobs, action?.payload?.jobs],
+        Jobs: [...state?.Jobs, action?.payload?.job],
       };
     }
     case ADDJOB_FAILURE: {

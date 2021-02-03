@@ -18,10 +18,6 @@ export const SigninSchema = yup.object({
   password: yup.string().required("This field is required."),
 });
 export const AddJobSchema = yup.object({
-  companyName: yup
-    .string()
-    .max(25, "Company Name is too long")
-    .required("this field is required"),
   title: yup
     .string()
     .max(25, "Job title is too long")

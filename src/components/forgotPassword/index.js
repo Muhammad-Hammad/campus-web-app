@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { sendResetEmail } from "../../redux/actions";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
@@ -10,7 +10,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Loader from "../loader";
 import { Form, Formik } from "formik";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
@@ -130,12 +129,12 @@ function ForgotPassword() {
                 )}
                 <Grid container justify="flex-end">
                   <Grid item xs>
-                    <Link href="/" variant="body2">
+                    <Link to="/" variant="body2">
                       Sign In here.
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="/signup" variant="body2">
+                    <Link to="/signup" variant="body2">
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>

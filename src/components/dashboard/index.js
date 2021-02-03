@@ -2,11 +2,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/actions";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import { RenderRoutes } from "../../routes";
 import Button from "@material-ui/core/Button";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch, Switch, Link } from "react-router-dom";
+import { RouteWithSubRoutes } from "../../routes";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -18,24 +17,26 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-function CompanyHome() {
+function Dashboard({ routes }) {
   const classes = useStyles();
   let { path, url } = useRouteMatch();
   const history = useHistory();
 
   return (
     <>
+      {/* <Link to="/dashboard/addjob">addjob</Link>
+      <Link to="/dashboard/showjob">showjob</Link> */}
       <Button
         color="primary"
         variant="outlined"
-        onClick={() => history.push(`dashboard/addjob`)}
+        onClick={() => history.push(`/dashboard/addjob`)}
       >
         Add Job
       </Button>
       <Button
         color="primary"
         variant="outlined"
-        onClick={() => history.push(`dashboard/showjob`)}
+        onClick={() => history.push(`/dashboard/showjob`)}
       >
         Show My Jobs
       </Button>
@@ -43,4 +44,4 @@ function CompanyHome() {
   );
 }
 
-export default CompanyHome;
+export default Dashboard;

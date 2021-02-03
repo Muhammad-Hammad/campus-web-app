@@ -15,80 +15,56 @@ export const ROUTES = [
     exact: true,
     key: "SIGNIN",
     private: false,
-    component: () => <Signin />,
+    component: Signin,
   },
   {
     path: "/signup",
     exact: true,
     key: "SIGNUP",
     private: false,
-    component: () => <Signup />,
+    component: Signup,
   },
   {
     path: "/forgotPassword",
     exact: true,
     key: "FORGOT_PASSWORD",
     private: false,
-    component: () => <ForgotPassword />,
+    component: ForgotPassword,
   },
   {
     path: "/dashboard",
     exact: true,
     key: "DASHBOARD",
     private: true,
-    component: RenderRoutes,
-    routes: [
-      {
-        path: "/dashboard",
-        exact: true,
-        key: "DASHBOARD_ROOT",
-        private: true,
-        component: () => {
-          // verify auth function if false then return to login page
-          return (
-            <Appbar>
-              <Dashboard />
-            </Appbar>
-          );
-        },
-      },
-      {
-        path: "/dashboard/addjob",
-        exact: true,
-        key: "ADDJOB",
-        private: true,
-        component: () => {
-          // verify auth function if false then return to login page
-          return (
-            <Appbar>
-              <AddJob />
-            </Appbar>
-          );
-        },
-      },
-      {
-        path: "/dashboard/showjob",
-        exact: true,
-        key: "SHOWJOB",
-        private: true,
-        component: () => {
-          // verify auth function if false then return to login page
-          return (
-            <Appbar>
-              <ShowJob />
-            </Appbar>
-          );
-        },
-      },
-    ],
+    component: Dashboard,
   },
   {
-    path: "*",
-    exact: false,
-    key: "*",
-    private: false,
-    component: () => <Error />,
+    path: "/dashboard/addjob",
+    exact: true,
+    key: "ADDJOB",
+    private: true,
+    component:
+      // verify auth function if false then return to login page
+
+      // <Appbar>
+      AddJob,
+    // </Appbar>
   },
+  {
+    path: "/dashboard/showjob",
+    exact: true,
+    key: "SHOWJOB",
+    private: true,
+    component: ShowJob,
+    // verify auth function if false then return to login page
+  },
+  // {
+  //   path: "*",
+  //   exact: false,
+  //   key: "*",
+  //   private: false,
+  //   component: () => <Error />,
+  // },
 ];
 
 export function RouteWithSubRoutes(route) {
@@ -103,15 +79,21 @@ export function RouteWithSubRoutes(route) {
 }
 export function RenderRoutes({ routes }) {
   return (
-    <Switch>
-      {routes.map((route, i) => {
-        console.log(
-          route.key,
-          <RouteWithSubRoutes key={route.key} {...route} />
-        );
-        return <RouteWithSubRoutes key={route.key} {...route} />;
-      })}
-      <Route component={() => <h1>Not Found!</h1>} />
-    </Switch>
+    <>
+      <Route
+        path={["/dashboard", "addjob", "showjob"]}
+        render={() => <Appbar />}
+      />
+      <Switch>
+        {routes.map((route, i) => {
+          // console.log(
+          //   route.key,
+          //   <RouteWithSubRoutes key={route.key} {...route} />
+          // );
+          return <RouteWithSubRoutes key={route.key} {...route} />;
+        })}
+        {/* <Route path="*" component={() => <h1>Not Found!</h1>} /> */}
+      </Switch>
+    </>
   );
 }
