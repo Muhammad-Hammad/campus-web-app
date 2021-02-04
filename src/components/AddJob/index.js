@@ -43,14 +43,13 @@ function AddJob() {
   const dispatch = useDispatch();
   const history = useHistory();
   let initialValues = {
-    companyName: "",
     title: "",
     experience: "",
     description: "",
   };
   const { login, signup, userName, user } = state;
   const handleSubmit = (e, { resetForm }) => {
-    dispatch(addJob(e.title, e.experience, e.description, user.uid));
+    dispatch(addJob(e.title, e.experience, e.description, user.uid, userName));
     resetForm({
       values: {
         title: "",

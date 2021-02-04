@@ -19,6 +19,7 @@ import {
   ADDJOB_REQUEST,
   ADDJOB_SUCCESS,
   ADDJOB_FAILURE,
+  MYJOB_SUCCESS,
 } from "../constants";
 
 const initState = {
@@ -268,6 +269,12 @@ export default function Auth(state = initState, action) {
           success: false,
           errorMsg: action?.payload?.error,
         },
+      };
+    }
+    case MYJOB_SUCCESS: {
+      return {
+        ...state,
+        Jobs: action?.payload?.job,
       };
     }
     default:

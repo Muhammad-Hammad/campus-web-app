@@ -20,6 +20,7 @@ import {
   ADDJOB_REQUEST,
   ADDJOB_SUCCESS,
   ADDJOB_FAILURE,
+  MYJOB_SUCCESS,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -136,6 +137,12 @@ const AddJobError = () => {
     type: ADDJOB_FAILURE,
   };
 };
+export const receiveMyJobs = (job) => {
+  return {
+    type: MYJOB_SUCCESS,
+    payload: { job },
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -247,22 +254,31 @@ export const detectRole = (UID) => (dispatch) => {
       dispatch(getDataError(error));
     });
 };
-export const addJob = (title, job, description, uid) => (dispatch) => {
+export const addJob = (title, experience, description, uid, userName) => (
+  dispatch
+) => {
   dispatch(requestAddJob());
   const newData = {
     title,
-    job,
+    experience,
     description,
+  };
+  const newData_ = {
+    title,
+    experience,
+    description,
+    userName,
   };
 
   const newJob = Firebase.database().ref(`/Users/${uid}`).child("Jobs").push()
     .key;
   let updates = {};
   updates[`/Jobs/${newJob}`] = newData;
-
+  let updates1 = {};
+  updates1[`/Jobs/${newJob}`] = newData_;
   Firebase.database()
     .ref()
-    .update(updates)
+    .update(updates1)
     .then(() => {
       Firebase.database()
         .ref(`/Users/${uid}`)

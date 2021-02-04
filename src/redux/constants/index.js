@@ -25,6 +25,7 @@ export const ADDJOB_REQUEST = "ADDJOB_REQUEST";
 export const ADDJOB_SUCCESS = "ADDJOB_SUCCESS";
 export const ADDJOB_FAILURE = "ADDJOB_FAILURE";
 
+export const MYJOB_SUCCESS = "MYJOB_SUCCESS";
 export const ADMIN = "ADMIN";
 export const COMPANY = "COMPANY";
 export const STUDENT = "STUDENT";
