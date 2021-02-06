@@ -30,13 +30,17 @@ function Dashboard({ routes }) {
     <>
       {/* <Link to="/dashboard/addjob">addjob</Link>
       <Link to="/dashboard/showjob">showjob</Link> */}
-      <Button
-        color="primary"
-        variant="outlined"
-        onClick={() => history.push(`/dashboard/addjob`)}
-      >
-        Add Job
-      </Button>
+      {role === "Company" ? (
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => history.push(`/dashboard/addjob`)}
+        >
+          Add Job
+        </Button>
+      ) : (
+        <div></div>
+      )}
       <Button
         color="primary"
         variant="outlined"

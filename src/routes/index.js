@@ -9,6 +9,7 @@ import Appbar from "../components/appbar";
 import Error from "../components/Error";
 import { useSelector } from "react-redux";
 import Loader from "../components/loader";
+import StudentJobs from "../components/studentJobs";
 export const ROUTES = [
   {
     path: "/",
@@ -56,6 +57,14 @@ export const ROUTES = [
     key: "SHOWJOB",
     private: true,
     component: ShowJob,
+    // verify auth function if false then return to login page
+  },
+  {
+    path: "/dashboard/studentjobs",
+    exact: true,
+    key: "STUDENTJOBS",
+    private: true,
+    component: StudentJobs,
     // verify auth function if false then return to login page
   },
   // {
