@@ -60,7 +60,7 @@ export const ROUTES = [
     // verify auth function if false then return to login page
   },
   {
-    path: "/dashboard/studentjobs",
+    path: "/dashboard/studentjob",
     exact: true,
     key: "STUDENTJOBS",
     private: true,

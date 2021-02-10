@@ -5,7 +5,7 @@ import { firebaseConfig } from "../firebase/index";
 import Store from "../redux/store";
 import App from "./app";
 import Appbar from "./appbar";
-import Test from "../App.test";
+import Test from "./test";
 
 Firebase.initializeApp(firebaseConfig);
 const store = Store();

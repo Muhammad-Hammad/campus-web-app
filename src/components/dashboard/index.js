@@ -41,12 +41,23 @@ function Dashboard({ routes }) {
       ) : (
         <div></div>
       )}
+      {role === "Student" ? (
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => history.push(`/dashboard/studentjob`)}
+        >
+          Student Jobs
+        </Button>
+      ) : (
+        <div></div>
+      )}
       <Button
         color="primary"
         variant="outlined"
         onClick={() => history.push(`/dashboard/showjob`)}
       >
-        Show My Jobs
+        Show All Jobs
       </Button>
     </>
   );

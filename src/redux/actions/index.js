@@ -21,6 +21,9 @@ import {
   ADDJOB_SUCCESS,
   ADDJOB_FAILURE,
   MYJOB_SUCCESS,
+  STUDENTJOB_FAILURE,
+  STUDENTJOB_SUCCESS,
+  STUDENTJOB_REQUEST,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -143,6 +146,21 @@ export const receiveMyJobs = (job) => {
     payload: { job },
   };
 };
+export const requestStudentJob = () => {
+  return {
+    type: STUDENTJOB_REQUEST,
+  };
+};
+export const receiveStudentJob = () => {
+  return {
+    type: STUDENTJOB_SUCCESS,
+  };
+};
+export const studentJobError = () => {
+  return {
+    type: STUDENTJOB_FAILURE,
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -237,7 +255,6 @@ export const sendResetEmail = (email) => (dispatch) => {
     });
 };
 
-/*            INCOMPLETE WORK                     */
 export const detectRole = (UID) => (dispatch) => {
   dispatch(requestgetData());
   // const UID = Firebase.auth().currentUser?.uid
@@ -294,3 +311,41 @@ export const addJob = (title, experience, description, uid, userName) => (
       dispatch(AddJobError());
     });
 };
+export const studentJob = (uid, key) => (dispatch) => {
+  dispatch(requestStudentJob());
+  let updates = {};
+  updates[`/Jobs/${key}`] = key;
+  Firebase.database()
+    .ref(`/Users/${uid}`)
+    .update(updates)
+    .then(() => {
+      dispatch(receiveAddJob());
+      console.log("success");
+    })
+    .catch((err) => {
+      dispatch(studentJobError());
+    });
+};
+// export const studentJob = (
+//   uid,
+//   { description, experience, title, userName }
+// ) => (dispatch) => {
+//   dispatch(requestStudentJob());
+//   const newData = {
+//     title,
+//     experience,
+//     description,
+//     userName,
+//   };
+//   let updates = {};
+//   updates[`/Jobs/`] = newData;
+//   Firebase.database()
+//     .ref(`/Users/${uid}`)
+//     .update(updates)
+//     .then(() => {
+//       dispatch(receiveStudentJob(newData));
+//     })
+//     .catch((error) => {
+//       dispatch(studentJobError());
+//     });
+// };

@@ -15,7 +15,7 @@ function App() {
   // console.log("user", user);
   // console.log("getData", getData);
   let check = Object.keys(user).length === 0 && user.constructor === Object;
-  console.log("job", Jobs);
+  // console.log("job", Jobs);
   return (
     <RenderRoutes routes={ROUTES} />
 
