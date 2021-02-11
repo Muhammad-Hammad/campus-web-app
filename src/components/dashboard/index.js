@@ -8,6 +8,8 @@ import Firebase from "firebase";
 import { useHistory, useRouteMatch, Switch, Link } from "react-router-dom";
 import { RouteWithSubRoutes } from "../../routes";
 import { receiveMyJobs } from "../../redux/actions";
+import Loader from "../loader";
+import { Box } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -26,41 +28,53 @@ function Dashboard({ routes }) {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { role, userName } = state;
-  return (
-    <>
-      {/* <Link to="/dashboard/addjob">addjob</Link>
+  if (!role) {
+    return <Loader size={300} />;
+  } else {
+    return (
+      <>
+        {/* <Link to="/dashboard/addjob">addjob</Link>
       <Link to="/dashboard/showjob">showjob</Link> */}
-      {role === "Company" ? (
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={() => history.push(`/dashboard/addjob`)}
-        >
-          Add Job
-        </Button>
-      ) : (
-        <div></div>
-      )}
-      {role === "Student" ? (
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={() => history.push(`/dashboard/studentjob`)}
-        >
-          Student Jobs
-        </Button>
-      ) : (
-        <div></div>
-      )}
-      <Button
-        color="primary"
-        variant="outlined"
-        onClick={() => history.push(`/dashboard/showjob`)}
-      >
-        Show All Jobs
-      </Button>
-    </>
-  );
+        <Box display="flex" justifyContent="center" m={1} p={1}>
+          {role === "Company" ? (
+            <Box p={1}>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => history.push(`/dashboard/addjob`)}
+              >
+                Add Job
+              </Button>
+            </Box>
+          ) : (
+            <div></div>
+          )}
+          {role === "Student" ? (
+            <Box p={1}>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => history.push(`/dashboard/studentjob`)}
+              >
+                Student Jobs
+              </Button>
+            </Box>
+          ) : (
+            <div></div>
+          )}
+          <Box p={1}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={() => history.push(`/dashboard/showjob`)}
+            >
+              Show All Jobs
+            </Button>
+          </Box>
+        </Box>
+      </>
+    );
+  }
 }
 
 export default Dashboard;

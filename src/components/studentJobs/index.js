@@ -2,14 +2,25 @@ import { useEffect, useState } from "react";
 import JobCard from "../ShowJobs/JobCard";
 import { useSelector, useDispatch } from "react-redux";
 import { receiveMyJobs, studentJob } from "../../redux/actions";
-import { Grid } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import Firebase from "firebase";
 
+const useStyles = makeStyles((theme) => ({
+  h2: {
+    margin: "1em 0 0.5em 0",
+    color: "#343434",
+    fontWeight: "normal",
+    fontFamily: "Ultra",
+    textTransform: "uppercase",
+    textShadow: "0 2px white, 0 3px #777",
+  },
+}));
 function StudentJobs() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { user, Jobs, role } = state;
   let [jobKey, setKey] = useState([]);
+  const classes = useStyles();
 
   useEffect(() => {
     Firebase.database()
@@ -37,34 +48,47 @@ function StudentJobs() {
   return (
     <div>
       {/* {console.log("hello")} */}
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <Typography variant="h2" className={classes.h2}>
+              Applied Jobs
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid container spacing={3}>
-        {console.log("_Jobs.length", _Jobs.length)}
-        {console.log("JobKey", jobKey.length)}
-        {jobKey.length > 0 ? (
-          _Jobs.map((val, ind) => {
-            let { title, experience, description } = val[1];
-            let key = val[0];
-            let flag = jobKey.includes(key);
-            console.log("flag", flag);
-            if (flag) {
-              return (
-                <Grid item xs={3}>
-                  <JobCard
-                    key={key}
-                    title={title}
-                    experience={experience}
-                    description={description}
-                    handleApply={() => handleApply(key)}
-                  />
-                </Grid>
-              );
-            }
-          })
-        ) : (
-          <div>
-            <h1>You don't have any Job</h1>
-          </div>
-        )}
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={3}>
+            {console.log("_Jobs.length", _Jobs.length)}
+            {console.log("JobKey", jobKey.length)}
+            {jobKey.length > 0 ? (
+              _Jobs.map((val, ind) => {
+                let { title, experience, description } = val[1];
+                let key = val[0];
+                let flag = jobKey.includes(key);
+                console.log("flag", flag);
+                if (flag) {
+                  return (
+                    <Grid item xs={3}>
+                      <JobCard
+                        key={key}
+                        title={title}
+                        experience={experience}
+                        description={description}
+                        handleApply={() => handleApply(key)}
+                      />
+                    </Grid>
+                  );
+                }
+              })
+            ) : (
+              <div>
+                <h1>You don't have any Job</h1>
+              </div>
+            )}
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );

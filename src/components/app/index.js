@@ -7,10 +7,12 @@ import Loader from "../loader";
 function App() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  let { login, signup, user, verify, getData, Jobs } = state;
-  // console.log(verify);
+  let { login, signup, user, verify, getData, Jobs, role } = state;
+  console.log("role", role);
   useEffect(() => {
-    dispatch(detectRole(user?.uid));
+    if (typeof role == undefined || role === "") {
+      dispatch(detectRole(user?.uid));
+    }
   }, [user]);
   // console.log("user", user);
   // console.log("getData", getData);

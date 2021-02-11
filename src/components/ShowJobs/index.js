@@ -1,15 +1,35 @@
 import { useEffect, useState } from "react";
 import JobCard from "./JobCard";
+import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { receiveMyJobs, studentJob } from "../../redux/actions";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import Firebase from "firebase";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  h2: {
+    margin: "0.2em 0 0.2em 0",
+    color: "black",
 
+    fontWeight: "normal",
+    fontFamily: "Helvetica",
+    textTransform: "uppercase",
+    // textShadow: "0 2px white, 0 3px #777",
+  },
+}));
 function ShowJobs() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  // const { nayajob } = Jobs;
-  // console.log("naya", nayajob);
+  const classes = useStyles();
   const { user, Jobs, role } = state;
   let [jobKey, setKey] = useState([]);
   useEffect(() => {
@@ -33,52 +53,71 @@ function ShowJobs() {
           const data = snapshot.val();
           const newData = data ? Object.keys(data) : [];
           setKey(newData);
-          // console.log("data key", newData);
         });
     }
   }, [user]);
-  console.log("jobkey", jobKey);
-  let Job_Val = Object.values(Jobs);
-  let Job_Key = Object.keys(Jobs);
   const handleApply = (key) => {
-    // console.log("job ayi hai", key);
     dispatch(studentJob(user.uid, key));
   };
-  // console.log(Object.entries(Jobs));
   let _Jobs = Object.entries(Jobs);
-  // console.log(Job_Key);
-  // console.log(_Jobs);
   return (
     <div>
       {/* {console.log("hello")} */}
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <Typography variant="h2" className={classes.h2}>
+              All Jobs
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid container spacing={3}>
-        {console.log("_Jobs.length", _Jobs.length)}
-        {console.log("JobKey", jobKey.length)}
-        {jobKey.length !== _Jobs.length ? (
-          _Jobs.map((val, ind) => {
-            let { title, experience, description } = val[1];
-            let key = val[0];
-            let flag = jobKey.includes(key);
-            console.log("flag", flag);
-            if (!flag) {
-              return (
-                <Grid item xs={3}>
-                  <JobCard
-                    key={key}
-                    title={title}
-                    experience={experience}
-                    description={description}
-                    handleApply={() => handleApply(key)}
-                  />
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={3}>
+            {console.log("_Jobs.length", _Jobs.length)}
+            {console.log("JobKey", jobKey.length)}
+            {jobKey.length !== _Jobs.length ? (
+              _Jobs.map((val, ind) => {
+                let { title, experience, description } = val[1];
+                let key = val[0];
+                let flag = jobKey.includes(key);
+                console.log("flag", flag);
+                if (!flag) {
+                  return (
+                    <Grid
+                      item
+                      xs={3}
+                      alignContent="center"
+                      alignItems="center"
+                      justify="center"
+                    >
+                      <JobCard
+                        key={key}
+                        title={title}
+                        experience={experience}
+                        description={description}
+                        handleApply={() => handleApply(key)}
+                      />
+                    </Grid>
+                  );
+                }
+              })
+            ) : (
+              <div>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Grid container justify="center">
+                      <Typography variant="h4" className={classes.h2}>
+                        You Dont have any Jobs
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              );
-            }
-          })
-        ) : (
-          <div>
-            <h1>You don't have any Job</h1>
-          </div>
-        )}
+              </div>
+            )}
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );

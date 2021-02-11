@@ -79,11 +79,7 @@ export default function SignUp() {
   };
 
   if (signup.success || login.success) {
-    if (str === undefined) {
-      return <Loading />;
-    } else {
-      return <Redirect to={`/dashboard`} />;
-    }
+    return <Redirect to={`/dashboard`} />;
   } else {
     return (
       <Container component="main" maxWidth="xs">

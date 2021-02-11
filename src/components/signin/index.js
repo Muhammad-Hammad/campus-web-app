@@ -177,7 +177,7 @@ function Signin() {
                   className={classes.submit}
                   disabled={!dirty}
                 >
-                  {!login.loading ? "Sign in" : <Loader />}
+                  {!login.loading ? "Sign in" : <Loader size={24} />}
                 </Button>
                 <Grid container justify="flex-end">
                   <Grid item xs>

@@ -80,10 +80,10 @@ const requestSignup = () => {
     type: SIGNUP_REQUEST,
   };
 };
-const receiveSignup = (user) => {
+const receiveSignup = (user, role) => {
   return {
     type: SIGNUP_SUCCESS,
-    payload: { user },
+    payload: { user, role },
   };
 };
 const signupError = (error) => {
@@ -225,7 +225,7 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
         password: password,
         role: role,
       });
-      dispatch(receiveSignup(user));
+      dispatch(receiveSignup(user, role));
     })
 
     .catch((error) => {

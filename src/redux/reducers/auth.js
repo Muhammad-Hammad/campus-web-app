@@ -66,6 +66,7 @@ const initState = {
   role: "",
   userName: "",
   Jobs: [],
+  AllJobs: [],
 };
 export default function Auth(state = initState, action) {
   switch (action.type) {
@@ -167,6 +168,7 @@ export default function Auth(state = initState, action) {
           success: true,
         },
         user: action?.payload?.user,
+        role: action?.payload?.role,
       };
     case SIGNUP_FAILURE:
       return {
