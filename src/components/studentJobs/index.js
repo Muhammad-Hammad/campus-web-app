@@ -11,12 +11,11 @@ import Firebase from "firebase";
 
 const useStyles = makeStyles((theme) => ({
   h2: {
-    margin: "1em 0 0.5em 0",
-    color: "#343434",
+    margin: "0.2em 0 0.2em 0",
+    color: "black",
     fontWeight: "normal",
-    fontFamily: "Ultra",
+    fontFamily: "Helvetica",
     textTransform: "uppercase",
-    textShadow: "0 2px white, 0 3px #777",
   },
 }));
 function StudentJobs() {
@@ -44,8 +43,6 @@ function StudentJobs() {
       });
   }, [user]);
   console.log("jobkey", jobKey);
-  let Job_Val = Object.values(Jobs);
-  let Job_Key = Object.keys(Jobs);
   console.log(user.uid);
   const handleApply = (key) => {
     dispatch(studentJob(user.uid, key));
@@ -53,7 +50,7 @@ function StudentJobs() {
   const handleDelete = (key) => {
     dispatch(deleteStudentJob(user.uid, key));
   };
-  let _Jobs = Object.entries(Jobs);
+  let _Jobs = Jobs ? Object.entries(Jobs) : [];
   return (
     <div>
       {/* {console.log("hello")} */}

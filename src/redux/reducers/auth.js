@@ -33,6 +33,9 @@ import {
   GETALLUSERS_REQUEST,
   GETALLUSERS_SUCCESS,
   GETALLUSERS_FAILURE,
+  BLOCKUSER_REQUEST,
+  BLOCKUSER_SUCCESS,
+  BLOCKUSER_FAILURE,
 } from "../constants";
 
 const initState = {
@@ -93,7 +96,13 @@ const initState = {
     success: false,
     errorMsg: "",
   },
-  getAllUsers: {
+  GetAllUsers: {
+    loading: true,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  BlockUser: {
     loading: false,
     error: false,
     success: false,
@@ -420,7 +429,7 @@ export default function Auth(state = initState, action) {
     case GETALLUSERS_REQUEST: {
       return {
         ...state,
-        getAllUsers: {
+        GetAllUsers: {
           loading: true,
           error: false,
           success: false,
@@ -431,7 +440,7 @@ export default function Auth(state = initState, action) {
     case GETALLUSERS_SUCCESS: {
       return {
         ...state,
-        getAllUsers: {
+        GetAllUsers: {
           loading: false,
           error: false,
           success: true,
@@ -443,7 +452,40 @@ export default function Auth(state = initState, action) {
     case GETALLUSERS_FAILURE: {
       return {
         ...state,
-        getAllUsers: {
+        GetAllUsers: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case BLOCKUSER_REQUEST: {
+      return {
+        ...state,
+        BlockUser: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case BLOCKUSER_SUCCESS: {
+      return {
+        ...state,
+        BlockUser: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+      };
+    }
+    case BLOCKUSER_FAILURE: {
+      return {
+        ...state,
+        BlockUser: {
           loading: false,
           error: true,
           success: false,

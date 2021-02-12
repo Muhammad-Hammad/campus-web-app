@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../redux/actions";
+import { getAllUsers, logoutUser } from "../../redux/actions";
 import { makeStyles } from "@material-ui/core/styles";
 import { RenderRoutes } from "../../routes";
 import Button from "@material-ui/core/Button";
@@ -28,7 +28,11 @@ function Dashboard({ routes }) {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { role, userName, user } = state;
-  useEffect(() => {}, [user]);
+  useEffect(() => {
+    if (role === "Admin") {
+      dispatch(getAllUsers());
+    }
+  }, [user]);
   if (!role) {
     return <Loader size={300} />;
   } else if (role === "Admin") {

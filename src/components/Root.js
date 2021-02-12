@@ -6,6 +6,7 @@ import Store from "../redux/store";
 import App from "./app";
 import Appbar from "./appbar";
 import Test from "./test";
+import AdminTable from "./admin/AdminTable";
 
 Firebase.initializeApp(firebaseConfig);
 const store = Store();
@@ -13,7 +14,7 @@ function Root() {
   return (
     <Provider store={store}>
       <Router>
-        <App />
+        <AdminTable />
       </Router>
     </Provider>
   );

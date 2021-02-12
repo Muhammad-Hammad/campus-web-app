@@ -33,6 +33,9 @@ import {
   GETALLUSERS_REQUEST,
   GETALLUSERS_SUCCESS,
   GETALLUSERS_FAILURE,
+  BLOCKUSER_REQUEST,
+  BLOCKUSER_SUCCESS,
+  BLOCKUSER_FAILURE,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -216,6 +219,21 @@ const allUsersError = () => {
     type: GETALLUSERS_FAILURE,
   };
 };
+const requestBlockUser = () => {
+  return {
+    type: BLOCKUSER_REQUEST,
+  };
+};
+const receiveBlockUser = () => {
+  return {
+    type: BLOCKUSER_SUCCESS,
+  };
+};
+const blockUserError = () => {
+  return {
+    type: BLOCKUSER_FAILURE,
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -279,6 +297,7 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
         email: email,
         password: password,
         role: role,
+        blocked: false,
       });
       dispatch(receiveSignup(user, role));
     })
@@ -434,14 +453,30 @@ export const getAllUsers = () => (dispatch) => {
       (snapshot) => {
         const data = snapshot.val();
         console.log("data agia saray k saray user", data);
-        dispatch(receiveAllUsers(data));
+        const newdata = Object.entries(data);
+        console.log("newData", newdata);
+        dispatch(receiveAllUsers(newdata));
       },
       () => {
         dispatch(allUsersError());
       }
     );
 };
-
+export const BlockUser = (uid, blocked) => (dispatch) => {
+  dispatch(requestBlockUser());
+  let updates = {};
+  updates[`/blocked`] = !blocked;
+  Firebase.database()
+    .ref(`Users/${uid}`)
+    .update(updates)
+    .then(() => {
+      dispatch(receiveBlockUser());
+      console.log("success");
+    })
+    .catch(() => {
+      dispatch(blockUserError());
+    });
+};
 // export const studentJob = (
 //   uid,
 //   { description, experience, title, userName }
