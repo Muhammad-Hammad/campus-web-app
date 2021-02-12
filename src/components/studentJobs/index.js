@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import JobCard from "../ShowJobs/JobCard";
 import { useSelector, useDispatch } from "react-redux";
-import { receiveMyJobs, studentJob } from "../../redux/actions";
+import {
+  deleteStudentJob,
+  receiveMyJobs,
+  studentJob,
+} from "../../redux/actions";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
 import Firebase from "firebase";
 
@@ -27,6 +31,7 @@ function StudentJobs() {
       .ref(`Jobs/`)
       .on(`value`, (snapshot) => {
         const data = snapshot.val();
+
         dispatch(receiveMyJobs(data));
       });
     Firebase.database()
@@ -41,8 +46,12 @@ function StudentJobs() {
   console.log("jobkey", jobKey);
   let Job_Val = Object.values(Jobs);
   let Job_Key = Object.keys(Jobs);
+  console.log(user.uid);
   const handleApply = (key) => {
     dispatch(studentJob(user.uid, key));
+  };
+  const handleDelete = (key) => {
+    dispatch(deleteStudentJob(user.uid, key));
   };
   let _Jobs = Object.entries(Jobs);
   return (
@@ -64,7 +73,8 @@ function StudentJobs() {
             {console.log("JobKey", jobKey.length)}
             {jobKey.length > 0 ? (
               _Jobs.map((val, ind) => {
-                let { title, experience, description } = val[1];
+                let { title, experience, description, userName } = val[1];
+
                 let key = val[0];
                 let flag = jobKey.includes(key);
                 console.log("flag", flag);
@@ -77,6 +87,8 @@ function StudentJobs() {
                         experience={experience}
                         description={description}
                         handleApply={() => handleApply(key)}
+                        handleDelete={() => handleDelete(key)}
+                        userName={userName}
                       />
                     </Grid>
                   );

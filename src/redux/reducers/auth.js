@@ -1,3 +1,4 @@
+import { RestaurantSharp } from "@material-ui/icons";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -20,6 +21,18 @@ import {
   ADDJOB_SUCCESS,
   ADDJOB_FAILURE,
   MYJOB_SUCCESS,
+  STUDENTJOB_REQUEST,
+  STUDENTJOB_SUCCESS,
+  STUDENTJOB_FAILURE,
+  DELETESTUDENTJOB_REQUEST,
+  DELETESTUDENTJOB_SUCCESS,
+  DELETESTUDENTJOB_FAILURE,
+  DELETECOMPANYJOB_REQUEST,
+  DELETECOMPANYJOB_SUCCESS,
+  DELETECOMPANYJOB_FAILURE,
+  GETALLUSERS_REQUEST,
+  GETALLUSERS_SUCCESS,
+  GETALLUSERS_FAILURE,
 } from "../constants";
 
 const initState = {
@@ -62,6 +75,31 @@ const initState = {
     success: false,
     errorMsg: "",
   },
+  studentJob: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  deleteStudentJob: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  deleteCompanyJob: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  getAllUsers: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  AllUsers: [],
   user: {},
   role: "",
   userName: "",
@@ -88,6 +126,7 @@ export default function Auth(state = initState, action) {
           success: true,
         },
         user: action?.payload?.user,
+        role: action?.payload?.role,
       };
     case LOGIN_FAILURE:
       return {
@@ -277,6 +316,139 @@ export default function Auth(state = initState, action) {
       return {
         ...state,
         Jobs: action?.payload?.job,
+      };
+    }
+    case STUDENTJOB_REQUEST: {
+      return {
+        ...state,
+        studentJob: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case STUDENTJOB_SUCCESS: {
+      return {
+        ...state,
+        studentJob: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+      };
+    }
+    case STUDENTJOB_FAILURE: {
+      return {
+        ...state,
+        studentJob: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETESTUDENTJOB_REQUEST: {
+      return {
+        ...state,
+        deleteStudentJob: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETESTUDENTJOB_SUCCESS: {
+      return {
+        ...state,
+        deleteStudentJob: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETESTUDENTJOB_FAILURE: {
+      return {
+        ...state,
+        deleteStudentJob: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETECOMPANYJOB_REQUEST: {
+      return {
+        ...state,
+        deleteCompanyJob: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETECOMPANYJOB_SUCCESS: {
+      return {
+        ...state,
+        deleteCompanyJob: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+      };
+    }
+    case DELETECOMPANYJOB_FAILURE: {
+      return {
+        ...state,
+        deleteCompanyJob: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case GETALLUSERS_REQUEST: {
+      return {
+        ...state,
+        getAllUsers: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case GETALLUSERS_SUCCESS: {
+      return {
+        ...state,
+        getAllUsers: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+        AllUsers: [action?.payload?.data],
+      };
+    }
+    case GETALLUSERS_FAILURE: {
+      return {
+        ...state,
+        getAllUsers: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
       };
     }
     default:

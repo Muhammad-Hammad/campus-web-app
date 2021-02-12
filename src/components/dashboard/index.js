@@ -27,9 +27,11 @@ function Dashboard({ routes }) {
   const history = useHistory();
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { role, userName } = state;
+  const { role, userName, user } = state;
+  useEffect(() => {}, [user]);
   if (!role) {
     return <Loader size={300} />;
+  } else if (role === "Admin") {
   } else {
     return (
       <>
@@ -68,7 +70,8 @@ function Dashboard({ routes }) {
               variant="outlined"
               onClick={() => history.push(`/dashboard/showjob`)}
             >
-              Show All Jobs
+              Show {role === "Student" ? "All" : role === "Company" ? "My" : ""}{" "}
+              Jobs
             </Button>
           </Box>
         </Box>

@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
     maxWidth: 300,
-    minHeight: 150,
+    minHeight: 300,
+    maxHeight: 300,
     padding: 20,
   },
   bullet: {
@@ -58,26 +59,14 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
-// const useStyles = makeStyles({
-
-//   modal: {
-//     display: "flex",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   paper: {
-//     // backgroundColor: theme.palette.background.paper,
-//     border: "2px solid #000",
-//     // boxShadow: theme.shadows[5],
-//     // padding: theme.spacing(2, 4, 3),
-//   },
-// });
 
 export default function JobCard({
   title,
   experience,
   description,
   handleApply,
+  handleDelete,
+  userName,
 }) {
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
@@ -98,8 +87,15 @@ export default function JobCard({
   return (
     <Card className={classes.root}>
       <CardContent>
+        {role === "Student" ? (
+          <Typography variant="h5" component="h2" className={classes.title}>
+            Company: {userName}
+          </Typography>
+        ) : (
+          ""
+        )}
         <Typography variant="h5" component="h2" className={classes.title}>
-          {T}
+          Title : {T}
         </Typography>
         <Typography variant="h6" component="h6" className={classes.title}>
           experience : {experience}
@@ -156,6 +152,34 @@ export default function JobCard({
                 ) : (
                   <div></div>
                 )}
+                {role === "Student" &&
+                location.pathname === "/dashboard/studentjob" ? (
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={handleDelete}
+                      color="secondary"
+                    >
+                      Delete
+                    </Button>
+                  </CardActions>
+                ) : (
+                  <div></div>
+                )}
+                {role === "Company" &&
+                location.pathname === "/dashboard/showjob" ? (
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={handleDelete}
+                      color="secondary"
+                    >
+                      Delete
+                    </Button>
+                  </CardActions>
+                ) : (
+                  <div></div>
+                )}
               </CardContent>
             </Card>
           </Fade>
@@ -164,6 +188,24 @@ export default function JobCard({
           <CardActions>
             <Button size="small" onClick={handleApply} color="primary">
               Apply here
+            </Button>
+          </CardActions>
+        ) : (
+          <div></div>
+        )}
+        {role === "Student" && location.pathname === "/dashboard/studentjob" ? (
+          <CardActions>
+            <Button size="small" onClick={handleDelete} color="secondary">
+              Delete
+            </Button>
+          </CardActions>
+        ) : (
+          <div></div>
+        )}
+        {role === "Company" && location.pathname === "/dashboard/showjob" ? (
+          <CardActions>
+            <Button size="small" onClick={handleDelete} color="secondary">
+              Delete
             </Button>
           </CardActions>
         ) : (

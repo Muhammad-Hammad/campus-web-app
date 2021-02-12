@@ -24,6 +24,15 @@ import {
   STUDENTJOB_FAILURE,
   STUDENTJOB_SUCCESS,
   STUDENTJOB_REQUEST,
+  DELETESTUDENTJOB_SUCCESS,
+  DELETESTUDENTJOB_REQUEST,
+  DELETESTUDENTJOB_FAILURE,
+  DELETECOMPANYJOB_REQUEST,
+  DELETECOMPANYJOB_SUCCESS,
+  DELETECOMPANYJOB_FAILURE,
+  GETALLUSERS_REQUEST,
+  GETALLUSERS_SUCCESS,
+  GETALLUSERS_FAILURE,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -31,10 +40,10 @@ const requestLogin = () => {
   };
 };
 
-const receiveLogin = (user) => {
+const receiveLogin = (user, role) => {
   return {
     type: LOGIN_SUCCESS,
-    payload: { user },
+    payload: { user, role },
   };
 };
 
@@ -161,6 +170,52 @@ export const studentJobError = () => {
     type: STUDENTJOB_FAILURE,
   };
 };
+const requestDeleteStudentJob = () => {
+  return {
+    type: DELETESTUDENTJOB_REQUEST,
+  };
+};
+const receiveDeleteStudentJob = () => {
+  return {
+    type: DELETESTUDENTJOB_SUCCESS,
+  };
+};
+const deleteStudentJobError = () => {
+  return {
+    type: DELETESTUDENTJOB_FAILURE,
+  };
+};
+const requestDeleteCompanyJob = () => {
+  return {
+    type: DELETECOMPANYJOB_REQUEST,
+  };
+};
+const receiveDeleteCompanyJob = () => {
+  return {
+    type: DELETECOMPANYJOB_SUCCESS,
+  };
+};
+const deleteCompanyJobError = () => {
+  return {
+    type: DELETECOMPANYJOB_FAILURE,
+  };
+};
+const requestAllUsers = () => {
+  return {
+    type: GETALLUSERS_REQUEST,
+  };
+};
+const receiveAllUsers = (data) => {
+  return {
+    type: GETALLUSERS_SUCCESS,
+    payload: { data },
+  };
+};
+const allUsersError = () => {
+  return {
+    type: GETALLUSERS_FAILURE,
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -185,7 +240,7 @@ export const loginUser = (email, password, role) => (dispatch) => {
         Firebase.auth()
           .signInWithEmailAndPassword(email, password)
           .then((user) => {
-            dispatch(receiveLogin(user));
+            dispatch(receiveLogin(user, role));
           })
           .catch((error) => {
             dispatch(loginError(error.message));
@@ -279,18 +334,20 @@ export const addJob = (title, experience, description, uid, userName) => (
     title,
     experience,
     description,
+    uid,
   };
   const newData_ = {
     title,
     experience,
     description,
     userName,
+    uid,
   };
 
   const newJob = Firebase.database().ref(`/Users/${uid}`).child("Jobs").push()
     .key;
   let updates = {};
-  updates[`/Jobs/${newJob}`] = newData;
+  updates[`/Jobs/${newJob}`] = newJob;
   let updates1 = {};
   updates1[`/Jobs/${newJob}`] = newData_;
   Firebase.database()
@@ -314,11 +371,14 @@ export const addJob = (title, experience, description, uid, userName) => (
 export const studentJob = (uid, key) => (dispatch) => {
   dispatch(requestStudentJob());
   let updates = {};
+  let updates1 = {};
+  updates1[`/AppliedPeople/${uid}`] = uid;
   updates[`/Jobs/${key}`] = key;
   Firebase.database()
     .ref(`/Users/${uid}`)
     .update(updates)
     .then(() => {
+      Firebase.database().ref(`/Jobs/${key}`).update(updates1);
       dispatch(receiveAddJob());
       console.log("success");
     })
@@ -326,6 +386,62 @@ export const studentJob = (uid, key) => (dispatch) => {
       dispatch(studentJobError());
     });
 };
+export const deleteStudentJob = (uid, key) => (dispatch) => {
+  dispatch(requestDeleteStudentJob());
+  let updates = {};
+  let updates1 = {};
+
+  updates1[`/AppliedPeople/${uid}`] = null;
+  updates[`/Jobs/${key}`] = null;
+  Firebase.database()
+    .ref(`/Users/${uid}`)
+    .update(updates)
+    .then(() => {
+      Firebase.database().ref(`/Jobs/${key}`).update(updates1);
+      dispatch(receiveDeleteStudentJob());
+      console.log("success");
+    })
+    .catch((err) => {
+      dispatch(deleteStudentJobError());
+    });
+};
+export const deleteCompanyJob = (uid, key) => (dispatch) => {
+  dispatch(requestDeleteCompanyJob());
+  let updates = {};
+  let updates1 = {};
+  console.log("key from Delte company", key);
+  console.log("uid from company", uid);
+  updates1[`${key}`] = null;
+  updates[`/Jobs/${key}`] = null;
+  Firebase.database()
+    .ref(`/Users/${uid}`)
+    .update(updates)
+    .then(() => {
+      Firebase.database().ref(`/Jobs/`).update(updates1);
+      dispatch(receiveDeleteCompanyJob());
+      console.log("success");
+    })
+    .catch((err) => {
+      dispatch(deleteCompanyJobError());
+    });
+};
+export const getAllUsers = () => (dispatch) => {
+  dispatch(requestAllUsers());
+  Firebase.database()
+    .ref("Users")
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        console.log("data agia saray k saray user", data);
+        dispatch(receiveAllUsers(data));
+      },
+      () => {
+        dispatch(allUsersError());
+      }
+    );
+};
+
 // export const studentJob = (
 //   uid,
 //   { description, experience, title, userName }

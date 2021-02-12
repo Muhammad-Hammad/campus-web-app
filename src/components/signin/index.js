@@ -69,8 +69,6 @@ function Signin() {
   };
 
   const { login, signup, userName, getData } = state;
-  let str = userName?.replace(/\s+/g, "-").toLowerCase();
-  console.log("getdata", getData.loading);
   const classes = useStyles();
   if (login.success || signup.success) {
     return <Redirect to={`/dashboard`} />;
