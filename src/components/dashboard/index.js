@@ -10,6 +10,7 @@ import { RouteWithSubRoutes } from "../../routes";
 import { receiveMyJobs } from "../../redux/actions";
 import Loader from "../loader";
 import { Box } from "@material-ui/core";
+import AdminPanel from "../admin";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -36,6 +37,7 @@ function Dashboard({ routes }) {
   if (!role) {
     return <Loader size={300} />;
   } else if (role === "Admin") {
+    return <AdminPanel />;
   } else {
     return (
       <>

@@ -159,11 +159,17 @@ function Signin() {
                       value="Student"
                       control={<Radio />}
                       label="Student"
+                      defaultChecked
                     />
                     <FormControlLabel
                       value="Company"
                       control={<Radio />}
                       label="Company"
+                    />
+                    <FormControlLabel
+                      value="Admin"
+                      control={<Radio />}
+                      label="Admin"
                     />
                   </RadioGroup>
                 </FormControl>

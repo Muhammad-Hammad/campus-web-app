@@ -36,6 +36,9 @@ import {
   BLOCKUSER_REQUEST,
   BLOCKUSER_SUCCESS,
   BLOCKUSER_FAILURE,
+  ALLJOBS_REQUEST,
+  ALLJOBS_SUCCESS,
+  ALLJOBS_FAILURE,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -234,6 +237,22 @@ const blockUserError = () => {
     type: BLOCKUSER_FAILURE,
   };
 };
+const requestAllJobs = () => {
+  return {
+    type: ALLJOBS_REQUEST,
+  };
+};
+const receiveAllJobs = (data) => {
+  return {
+    type: ALLJOBS_SUCCESS,
+    payload: { data },
+  };
+};
+const allJobsError = () => {
+  return {
+    type: ALLJOBS_FAILURE,
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -253,6 +272,10 @@ export const loginUser = (email, password, role) => (dispatch) => {
       }
       const newEmail = filtered[0][1]?.email;
       const newRole = filtered[0][1]?.role;
+      const isBlocked = filtered[0][1]?.blocked;
+      if (isBlocked) {
+        return dispatch(loginError("You have been blocked by The Admin"));
+      }
 
       if (newEmail === email && newRole === role) {
         Firebase.auth()
@@ -476,6 +499,21 @@ export const BlockUser = (uid, blocked) => (dispatch) => {
     .catch(() => {
       dispatch(blockUserError());
     });
+};
+export const getAllJobs = () => (dispatch) => {
+  dispatch(requestAllJobs());
+  Firebase.database()
+    .ref(`Jobs/`)
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        dispatch(receiveAllJobs(data));
+      },
+      () => {
+        dispatch(allJobsError());
+      }
+    );
 };
 // export const studentJob = (
 //   uid,

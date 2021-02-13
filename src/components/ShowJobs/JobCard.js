@@ -87,7 +87,7 @@ export default function JobCard({
   return (
     <Card className={classes.root}>
       <CardContent>
-        {role === "Student" ? (
+        {role === "Student" || role === "Admin" ? (
           <Typography variant="h5" component="h2" className={classes.title}>
             Company: {userName}
           </Typography>

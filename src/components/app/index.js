@@ -14,7 +14,11 @@ function App() {
     }
   }, [user]);
   let check = Object.keys(user).length === 0 && user.constructor === Object;
-  return <RenderRoutes routes={ROUTES} />;
+  if (verify.verifying) {
+    return <Loader size={300} />;
+  } else {
+    return <RenderRoutes routes={ROUTES} />;
+  }
 }
 
 export default App;

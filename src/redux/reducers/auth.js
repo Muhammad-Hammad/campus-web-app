@@ -36,6 +36,9 @@ import {
   BLOCKUSER_REQUEST,
   BLOCKUSER_SUCCESS,
   BLOCKUSER_FAILURE,
+  ALLJOBS_REQUEST,
+  ALLJOBS_SUCCESS,
+  ALLJOBS_FAILURE,
 } from "../constants";
 
 const initState = {
@@ -103,6 +106,12 @@ const initState = {
     errorMsg: "",
   },
   BlockUser: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  GetAllJobs: {
     loading: false,
     error: false,
     success: false,
@@ -486,6 +495,40 @@ export default function Auth(state = initState, action) {
       return {
         ...state,
         BlockUser: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case ALLJOBS_REQUEST: {
+      return {
+        ...state,
+        GetAllJobs: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case ALLJOBS_SUCCESS: {
+      return {
+        ...state,
+        GetAllJobs: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+        AllJobs: [action?.payload?.data],
+      };
+    }
+    case ALLJOBS_FAILURE: {
+      return {
+        ...state,
+        GetAllJobs: {
           loading: false,
           error: true,
           success: false,

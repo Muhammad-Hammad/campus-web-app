@@ -14,7 +14,7 @@ function Root() {
   return (
     <Provider store={store}>
       <Router>
-        <AdminTable />
+        <App />
       </Router>
     </Provider>
   );
