@@ -7,7 +7,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { useDispatch, useSelector } from "react-redux";
-import { BlockUser, getAllJobs, getAllUsers } from "../../redux/actions";
+import {
+  BlockUser,
+  getAllJobs,
+  getAllUsers,
+  verifiedUser,
+} from "../../redux/actions";
 import Loader from "../loader";
 import { Button, Grid, Typography } from "@material-ui/core";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -50,6 +55,9 @@ export default function AdminTable() {
   const handleBlock = (uid, blocked) => {
     dispatch(BlockUser(uid, blocked));
   };
+  const handleVerified = (uid, verified) => {
+    dispatch(verifiedUser(uid, verified));
+  };
 
   const [SaariJobs] = AllJobs;
   const Joby = SaariJobs ? Object.entries(SaariJobs) : [];
@@ -79,6 +87,7 @@ export default function AdminTable() {
               <TableCell>UserName</TableCell>
               <TableCell>Blocked</TableCell>
               <TableCell style={{ paddingLeft: "3em" }}>Status</TableCell>
+              <TableCell style={{ paddingLeft: "1em" }}>Verification</TableCell>
               <TableCell style={{ paddingLeft: "2em" }}>Jobs</TableCell>
             </TableRow>
           </TableHead>
@@ -93,6 +102,7 @@ export default function AdminTable() {
                 role,
                 blocked,
                 Jobs,
+                verified,
               } = row[1];
               if (role !== "Admin") {
                 // console.log(email, uid, password, blocked, Jobs);
@@ -104,10 +114,7 @@ export default function AdminTable() {
                     ? filteredJobs.push(val[1])
                     : null;
                 });
-                // console.log("isJob", isJob);
                 console.log("filteredJobs", filteredJobs);
-                //   console.log(Object.keys(Jobs));
-                //   let thisJob =
 
                 return (
                   <TableRow key={uid}>
@@ -136,6 +143,14 @@ export default function AdminTable() {
                       </Button>
                     </TableCell>
                     <TableCell>
+                      <Button
+                        color="secondary"
+                        onClick={() => handleVerified(uid, verified)}
+                      >
+                        {verified.toString()}
+                      </Button>
+                    </TableCell>
+                    <TableCell>
                       <Button onClick={handleOpen}>Show</Button>
                       <Modal
                         aria-labelledby="transition-modal-title"
@@ -144,7 +159,7 @@ export default function AdminTable() {
                         open={open}
                         onClose={handleClose}
                         closeAfterTransition
-                        BackdropComponent={Backdrop}
+                        // BackdropComponent={Backdrop}
                         BackdropProps={{
                           timeout: 500,
                         }}
@@ -152,7 +167,7 @@ export default function AdminTable() {
                         <Fade in={open}>
                           <div>
                             <Grid container spacing={3}>
-                              <Grid item xs={12}>
+                              <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <Grid container justify="center" spacing={3}>
                                   {filteredJobs ? (
                                     filteredJobs.map((val, ind) => {
@@ -168,7 +183,10 @@ export default function AdminTable() {
                                       return (
                                         <Grid
                                           item
-                                          xs={3}
+                                          xs={12}
+                                          sm={6}
+                                          md={4}
+                                          lg={3}
                                           alignContent="center"
                                           alignItems="center"
                                           justify="center"

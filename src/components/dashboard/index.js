@@ -29,6 +29,7 @@ function Dashboard({ routes }) {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { role, userName, user } = state;
+
   useEffect(() => {
     if (role === "Admin") {
       dispatch(getAllUsers());

@@ -4,6 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteCompanyJob,
+  detectRole,
+  getCompanyJobs,
+  getStudentJobs,
   receiveMyJobs,
   studentJob,
 } from "../../redux/actions";
@@ -35,19 +38,21 @@ function ShowJobs() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { user, Jobs, role, userName } = state;
+  const { user, Jobs, role, userName, loading, MyJobs } = state;
   let [jobKey, setKey] = useState([]);
+  console.log("user", user);
   useEffect(() => {
     if (role === "Company") {
-      Firebase.database()
-        .ref(`Jobs/`)
-        .orderByChild("uid")
-        .equalTo(user.uid)
-        .on(`value`, (snapshot) => {
-          const data = snapshot.val();
-          console.log("checkData", data);
-          dispatch(receiveMyJobs(data));
-        });
+      dispatch(getCompanyJobs(user.uid));
+      // Firebase.database()
+      //   .ref(`Jobs/`)
+      //   .orderByChild("uid")
+      //   .equalTo(user.uid)
+      //   .on(`value`, (snapshot) => {
+      //     const data = snapshot.val();
+      //     console.log("checkData", data);
+      //     dispatch(receiveMyJobs(data));
+      //   });
 
       // Firebase.database()
       //   .ref(`Jobs/`)
@@ -76,12 +81,7 @@ function ShowJobs() {
       //   dispatch(receiveMyJobs(data));
       // });
     } else if (role === "Student") {
-      Firebase.database()
-        .ref(`Jobs/`)
-        .on(`value`, (snapshot) => {
-          const data = snapshot.val();
-          dispatch(receiveMyJobs(data));
-        });
+      dispatch(getStudentJobs());
       Firebase.database()
         .ref(`Users/${user.uid}/Jobs`)
         .on(`value`, (snapshot) => {
@@ -98,9 +98,10 @@ function ShowJobs() {
     dispatch(deleteCompanyJob(user.uid, key));
   };
   let _Jobs = Jobs ? Object.entries(Jobs) : [];
-  if (!role) {
-    return <Loader />;
-  } else if (role === "Student") {
+  if (!role || MyJobs.loading) {
+    console.log(MyJobs.loading, role);
+    return <Loader size={150} />;
+  } else if (role === "Student" || !MyJobs.loading) {
     return (
       <div>
         {/* {console.log("hello")} */}
@@ -114,7 +115,7 @@ function ShowJobs() {
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
             <Grid container justify="center" spacing={3}>
               {console.log("_Jobs.length", _Jobs.length)}
               {console.log("JobKey", jobKey.length)}
@@ -129,7 +130,10 @@ function ShowJobs() {
                     return (
                       <Grid
                         item
-                        xs={3}
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
                         alignContent="center"
                         alignItems="center"
                         justify="center"

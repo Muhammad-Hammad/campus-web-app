@@ -9,6 +9,7 @@ import Test from "./test";
 import AdminTable from "./admin/AdminTable";
 
 Firebase.initializeApp(firebaseConfig);
+
 const store = Store();
 function Root() {
   return (

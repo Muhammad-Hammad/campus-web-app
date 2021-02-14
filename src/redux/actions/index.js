@@ -39,6 +39,11 @@ import {
   ALLJOBS_REQUEST,
   ALLJOBS_SUCCESS,
   ALLJOBS_FAILURE,
+  MYJOB_REQUEST,
+  MYJOB_FAILURE,
+  VERIFYUSER_REQUEST,
+  VERIFYUSER_SUCCESS,
+  VERIFYUSER_FAILURE,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -155,10 +160,20 @@ const AddJobError = () => {
     type: ADDJOB_FAILURE,
   };
 };
+const requestMyJobs = () => {
+  return {
+    type: MYJOB_REQUEST,
+  };
+};
 export const receiveMyJobs = (job) => {
   return {
     type: MYJOB_SUCCESS,
     payload: { job },
+  };
+};
+const myJobsError = () => {
+  return {
+    type: MYJOB_FAILURE,
   };
 };
 export const requestStudentJob = () => {
@@ -253,6 +268,21 @@ const allJobsError = () => {
     type: ALLJOBS_FAILURE,
   };
 };
+const requestVerifiedUser = () => {
+  return {
+    type: VERIFYUSER_REQUEST,
+  };
+};
+const receiveVerifiedUser = () => {
+  return {
+    type: VERIFYUSER_SUCCESS,
+  };
+};
+const verifiedUserError = () => {
+  return {
+    type: VERIFYUSER_FAILURE,
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -273,8 +303,12 @@ export const loginUser = (email, password, role) => (dispatch) => {
       const newEmail = filtered[0][1]?.email;
       const newRole = filtered[0][1]?.role;
       const isBlocked = filtered[0][1]?.blocked;
+      const isVerified = filtered[0][1]?.verified;
       if (isBlocked) {
         return dispatch(loginError("You have been blocked by The Admin"));
+      }
+      if (!isVerified) {
+        return dispatch(loginError("You are not verified by the Admin"));
       }
 
       if (newEmail === email && newRole === role) {
@@ -321,6 +355,7 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
         password: password,
         role: role,
         blocked: false,
+        verified: false,
       });
       dispatch(receiveSignup(user, role));
     })
@@ -333,8 +368,25 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
 export const verifyAuth = () => (dispatch) => {
   dispatch(verifyRequest());
   Firebase.auth().onAuthStateChanged((user) => {
+    console.log("user from verify auth", user);
     if (user !== null) {
-      dispatch(receiveLogin(user));
+      dispatch(requestLogin());
+      Firebase.database()
+        .ref(`Users/${user.uid}`)
+        .on(`value`, (snapshot) => {
+          const data = snapshot.val();
+          const { role, blocked, verified } = data;
+          if (blocked || !verified) {
+            Firebase.auth()
+              .signOut()
+              .then(() => {
+                dispatch(receiveLogout());
+              });
+          } else {
+            console.log("chal ra hun");
+            dispatch(receiveLogin(user, role));
+          }
+        });
     }
     dispatch(verifySuccess());
   });
@@ -514,6 +566,55 @@ export const getAllJobs = () => (dispatch) => {
         dispatch(allJobsError());
       }
     );
+};
+
+export const getCompanyJobs = (uid) => (dispatch) => {
+  dispatch(requestMyJobs());
+  Firebase.database()
+    .ref(`Jobs/`)
+    .orderByChild("uid")
+    .equalTo(uid)
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        console.log("checkData", data);
+        dispatch(receiveMyJobs(data));
+      },
+      () => {
+        dispatch(myJobsError());
+      }
+    );
+};
+export const getStudentJobs = () => (dispatch) => {
+  dispatch(requestMyJobs());
+  Firebase.database()
+    .ref(`Jobs/`)
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        dispatch(receiveMyJobs(data));
+      },
+      () => {
+        dispatch(myJobsError());
+      }
+    );
+};
+export const verifiedUser = (uid, verified) => (dispatch) => {
+  dispatch(requestVerifiedUser());
+  let updates = {};
+  updates[`/verified`] = !verified;
+  Firebase.database()
+    .ref(`Users/${uid}`)
+    .update(updates)
+    .then(() => {
+      dispatch(receiveVerifiedUser());
+      console.log("success");
+    })
+    .catch(() => {
+      dispatch(verifiedUserError());
+    });
 };
 // export const studentJob = (
 //   uid,

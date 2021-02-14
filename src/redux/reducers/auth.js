@@ -1,4 +1,3 @@
-import { RestaurantSharp } from "@material-ui/icons";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -39,6 +38,11 @@ import {
   ALLJOBS_REQUEST,
   ALLJOBS_SUCCESS,
   ALLJOBS_FAILURE,
+  MYJOB_REQUEST,
+  MYJOB_FAILURE,
+  VERIFYUSER_REQUEST,
+  VERIFYUSER_SUCCESS,
+  VERIFYUSER_FAILURE,
 } from "../constants";
 
 const initState = {
@@ -117,12 +121,25 @@ const initState = {
     success: false,
     errorMsg: "",
   },
+  MyJobs: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  verifyUser: {
+    loading: false,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
   AllUsers: [],
   user: {},
   role: "",
   userName: "",
   Jobs: [],
   AllJobs: [],
+  loading: true,
 };
 export default function Auth(state = initState, action) {
   switch (action.type) {
@@ -330,10 +347,38 @@ export default function Auth(state = initState, action) {
         },
       };
     }
+    case MYJOB_REQUEST: {
+      return {
+        ...state,
+        MyJobs: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
     case MYJOB_SUCCESS: {
       return {
         ...state,
+        MyJobs: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
         Jobs: action?.payload?.job,
+      };
+    }
+    case MYJOB_FAILURE: {
+      return {
+        ...state,
+        MyJobs: {
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        },
       };
     }
     case STUDENTJOB_REQUEST: {
@@ -531,6 +576,39 @@ export default function Auth(state = initState, action) {
         GetAllJobs: {
           loading: false,
           error: true,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case VERIFYUSER_REQUEST: {
+      return {
+        ...state,
+        verifyUser: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        },
+      };
+    }
+    case VERIFYUSER_SUCCESS: {
+      return {
+        ...state,
+        verifyUser: {
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+      };
+    }
+    case VERIFYUSER_FAILURE: {
+      return {
+        ...state,
+        verifyUser: {
+          loading: false,
+          error: false,
           success: false,
           errorMsg: "",
         },
