@@ -368,7 +368,7 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
 export const verifyAuth = () => (dispatch) => {
   dispatch(verifyRequest());
   Firebase.auth().onAuthStateChanged((user) => {
-    console.log("user from verify auth", user);
+    // console.log("user from verify auth", user);
     if (user !== null) {
       dispatch(requestLogin());
       Firebase.database()
@@ -383,7 +383,7 @@ export const verifyAuth = () => (dispatch) => {
                 dispatch(receiveLogout());
               });
           } else {
-            console.log("chal ra hun");
+            // console.log("chal ra hun");
             dispatch(receiveLogin(user, role));
           }
         });
@@ -527,9 +527,9 @@ export const getAllUsers = () => (dispatch) => {
       `value`,
       (snapshot) => {
         const data = snapshot.val();
-        console.log("data agia saray k saray user", data);
+        // console.log("data agia saray k saray user", data);
         const newdata = Object.entries(data);
-        console.log("newData", newdata);
+        // console.log("newData", newdata);
         dispatch(receiveAllUsers(newdata));
       },
       () => {
@@ -546,7 +546,7 @@ export const BlockUser = (uid, blocked) => (dispatch) => {
     .update(updates)
     .then(() => {
       dispatch(receiveBlockUser());
-      console.log("success");
+      // console.log("success");
     })
     .catch(() => {
       dispatch(blockUserError());
@@ -578,7 +578,7 @@ export const getCompanyJobs = (uid) => (dispatch) => {
       `value`,
       (snapshot) => {
         const data = snapshot.val();
-        console.log("checkData", data);
+        // console.log("checkData", data);
         dispatch(receiveMyJobs(data));
       },
       () => {
@@ -610,7 +610,7 @@ export const verifiedUser = (uid, verified) => (dispatch) => {
     .update(updates)
     .then(() => {
       dispatch(receiveVerifiedUser());
-      console.log("success");
+      // console.log("success");
     })
     .catch(() => {
       dispatch(verifiedUserError());

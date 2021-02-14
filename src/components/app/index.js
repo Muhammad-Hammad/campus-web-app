@@ -8,7 +8,7 @@ function App() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   let { login, signup, user, verify, getData, Jobs, role, userName } = state;
-  console.log(role, user.email);
+  // console.log(role, user.email);
   // useEffect(() => {
   //   if (!role) {
   //     dispatch(detectRole(user?.uid));
@@ -16,7 +16,7 @@ function App() {
   // }, [user]);
   let check = Object.keys(user).length === 0 && user.constructor === Object;
   if (verify.verifying || login.loading) {
-    console.log("main chala");
+    // console.log("main chala");
     return <Loader size={300} />;
   } else {
     return <RenderRoutes routes={ROUTES} />;
