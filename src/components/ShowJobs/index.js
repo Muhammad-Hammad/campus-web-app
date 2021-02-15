@@ -14,54 +14,38 @@ import { Grid, Typography } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import Firebase from "firebase";
 import Loader from "../loader";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  h2: {
-    margin: "0.2em 0 0.2em 0",
-    color: "black",
 
-    fontWeight: "normal",
-    fontFamily: "Helvetica",
-    textTransform: "uppercase",
-    // textShadow: "0 2px white, 0 3px #777",
-  },
-}));
 function ShowJobs() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const classes = useStyles();
-  const { user, Jobs, role, userName, loading, MyJobs } = state;
+
+  const { user, Jobs, role, userName, loading, MyJobs, drawer } = state;
   let [jobKey, setKey] = useState([]);
-  console.log("user", user);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      marginLeft: drawer ? "250px" : "82px",
+      transition: "0.3s ease",
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+    h2: {
+      margin: "0.2em 0 0.2em 0",
+      color: "black",
+
+      fontWeight: "normal",
+      fontFamily: "Helvetica",
+      textTransform: "uppercase",
+    },
+  }));
+  const classes = useStyles();
   useEffect(() => {
     if (role === "Company") {
       dispatch(getCompanyJobs(user.uid));
-      // Firebase.database()
-      //   .ref(`Jobs/`)
-      //   .orderByChild("uid")
-      //   .equalTo(user.uid)
-      //   .on(`value`, (snapshot) => {
-      //     const data = snapshot.val();
-      //     console.log("checkData", data);
-      //     dispatch(receiveMyJobs(data));
-      //   });
-
-      // Firebase.database()
-      //   .ref(`Jobs/`)
-      //   .on(`value`, (snapshot) => {
-      //     const data = snapshot.val();
-
-      //     console.log("data", data);
-      //     dispatch(receiveMyJobs(data));
-      //   });
       Firebase.database()
         .ref(`Users/${user.uid}/Jobs`)
         .on(`value`, (snapshot) => {
@@ -70,16 +54,6 @@ function ShowJobs() {
           const newData = data ? Object.keys(data) : [];
           setKey(newData);
         });
-      // Firebase.database()
-      // .ref(`Users/${user.uid}/Jobs`)
-      // .on(`value`, (snapshot) => {
-      //   const data = snapshot.val();
-      //   console.log("data", data);
-      //   const newData = data ? Object.keys(data) : [];
-      //   console.log("newData", newData);
-      //   setKey(newData);
-      //   dispatch(receiveMyJobs(data));
-      // });
     } else if (role === "Student") {
       dispatch(getStudentJobs());
       Firebase.database()
@@ -103,7 +77,7 @@ function ShowJobs() {
     return <Loader size={150} />;
   } else if (role === "Student" || !MyJobs.loading) {
     return (
-      <div>
+      <div className={classes.root}>
         {/* {console.log("hello")} */}
         <Grid container>
           <Grid item xs={12}>

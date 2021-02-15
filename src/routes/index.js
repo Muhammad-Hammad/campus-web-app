@@ -79,6 +79,7 @@ export const ROUTES = [
 export function RouteWithSubRoutes(route) {
   const state = useSelector((state) => state.auth);
   const { verify, login, signup } = state;
+
   return (
     <Route
       path={route.path}
@@ -91,14 +92,10 @@ export function RenderRoutes({ routes }) {
     <>
       <Route
         path={["/dashboard", "addjob", "showjob"]}
-        render={() => <Appbar />}
+        render={(props) => <Appbar props={routes} />}
       />
       <Switch>
         {routes.map((route, i) => {
-          // console.log(
-          //   route.key,
-          //   <RouteWithSubRoutes key={route.key} {...route} />
-          // );
           return <RouteWithSubRoutes key={route.key} {...route} />;
         })}
         {/* <Route path="*" component={() => <h1>Not Found!</h1>} /> */}

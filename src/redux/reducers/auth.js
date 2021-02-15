@@ -43,6 +43,7 @@ import {
   VERIFYUSER_REQUEST,
   VERIFYUSER_SUCCESS,
   VERIFYUSER_FAILURE,
+  DRAWER_SUCCESS,
 } from "../constants";
 
 const initState = {
@@ -139,7 +140,7 @@ const initState = {
   userName: "",
   Jobs: [],
   AllJobs: [],
-  loading: true,
+  drawer: false,
 };
 export default function Auth(state = initState, action) {
   switch (action.type) {
@@ -612,6 +613,12 @@ export default function Auth(state = initState, action) {
           success: false,
           errorMsg: "",
         },
+      };
+    }
+    case DRAWER_SUCCESS: {
+      return {
+        ...state,
+        drawer: action?.payload?.bool,
       };
     }
     default:

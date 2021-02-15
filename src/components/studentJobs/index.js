@@ -9,20 +9,25 @@ import {
 import { Grid, makeStyles, Typography } from "@material-ui/core";
 import Firebase from "firebase";
 
-const useStyles = makeStyles((theme) => ({
-  h2: {
-    margin: "0.2em 0 0.2em 0",
-    color: "black",
-    fontWeight: "normal",
-    fontFamily: "Helvetica",
-    textTransform: "uppercase",
-  },
-}));
 function StudentJobs() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { user, Jobs, role } = state;
+  const { user, Jobs, role, drawer } = state;
   let [jobKey, setKey] = useState([]);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      marginLeft: drawer ? "250px" : "82px",
+      transition: "0.3s ease",
+    },
+    h2: {
+      margin: "0.2em 0 0.2em 0",
+      color: "black",
+      fontWeight: "normal",
+      fontFamily: "Helvetica",
+      textTransform: "uppercase",
+    },
+  }));
   const classes = useStyles();
 
   useEffect(() => {
@@ -52,7 +57,7 @@ function StudentJobs() {
   };
   let _Jobs = Jobs ? Object.entries(Jobs) : [];
   return (
-    <div>
+    <div className={classes.root}>
       {/* {console.log("hello")} */}
       <Grid container>
         <Grid item xs={12}>

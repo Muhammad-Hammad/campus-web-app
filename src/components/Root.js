@@ -5,8 +5,9 @@ import { firebaseConfig } from "../firebase/index";
 import Store from "../redux/store";
 import App from "./app";
 import Appbar from "./appbar";
-// import Test from "./test";
+import Test from "./test";
 import AdminTable from "./admin/AdminTable";
+import AdminPanel from "./admin";
 
 Firebase.initializeApp(firebaseConfig);
 

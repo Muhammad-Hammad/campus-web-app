@@ -25,6 +25,8 @@ import {
 import Loader from "../loader";
 import {
   Button,
+  Card,
+  CardContent,
   Grid,
   Paper,
   TableContainer,
@@ -132,6 +134,9 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 const useStyles2 = makeStyles({
+  root: {
+    marginLeft: "inherit",
+  },
   table: {
     minWidth: 500,
   },
@@ -194,172 +199,173 @@ export default function AdminTable() {
   } else if (!GetAllUsers.loading) {
     return (
       <React.Fragment>
-        {/* <Title>Recent Orders</Title> */}
-        <TableContainer component={Paper}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ minWidth: 250 }}>Email</TableCell>
-                <TableCell style={{ minWidth: 120 }}>Password</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell style={{ minWidth: 120 }}>UserName</TableCell>
-                <TableCell>Blocked</TableCell>
-                <TableCell style={{ paddingLeft: "3em" }}>Status</TableCell>
-                <TableCell style={{ paddingLeft: "1em" }}>
-                  Verification
-                </TableCell>
-                <TableCell style={{ paddingLeft: "2em" }}>Jobs</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? SarayUsers.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : SarayUsers
-              ).map((row) => {
-                let {
-                  email,
-                  uid,
-                  password,
-                  userName,
-                  role,
-                  blocked,
-                  Jobs,
-                  verified,
-                } = row[1];
-                if (role !== "Admin") {
-                  let isJob = Jobs ? Object.keys(Jobs) : [];
+        <div className={classes.root}>
+          {/* <Title>Recent Orders</Title> */}
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ minWidth: 270 }}>Email</TableCell>
+                  <TableCell style={{ minWidth: 160 }}>Password</TableCell>
+                  <TableCell style={{ minWidth: 140 }}>Role</TableCell>
+                  <TableCell style={{ minWidth: 140 }}>UserName</TableCell>
+                  <TableCell>Blocked</TableCell>
+                  <TableCell style={{ minWidth: 140, paddingLeft: "26px" }}>
+                    Status
+                  </TableCell>
+                  <TableCell style={{ minWidth: 140 }}>Verification</TableCell>
+                  <TableCell style={{ minWidth: 140 }}>Jobs</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? SarayUsers.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : SarayUsers
+                ).map((row) => {
+                  let {
+                    email,
+                    uid,
+                    password,
+                    userName,
+                    role,
+                    blocked,
+                    Jobs,
+                    verified,
+                  } = row[1];
+                  if (role !== "Admin") {
+                    let isJob = Jobs ? Object.keys(Jobs) : [];
 
-                  return (
-                    <TableRow key={uid}>
-                      <TableCell style={{ minWidth: 250 }}>{email}</TableCell>
-                      <TableCell style={{ minWidth: 120 }}>
-                        {password}
-                      </TableCell>
-                      <TableCell>{role}</TableCell>
-                      <TableCell style={{ minWidth: 120 }}>
-                        {userName}
-                      </TableCell>
-                      <TableCell>{blocked.toString()}</TableCell>
-                      <TableCell>
-                        <Button
-                          color="secondary"
-                          onClick={() => handleBlock(uid, blocked)}
-                        >
-                          {blocked ? (
-                            "Unblock"
-                          ) : (
-                            <span
-                              style={{
-                                marginLeft: "1em",
-                                marginRight: "1em",
-                              }}
-                            >
-                              block
-                            </span>
-                          )}
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          color="secondary"
-                          onClick={() => handleVerified(uid, verified)}
-                        >
-                          {verified.toString()}
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => handleOpen(isJob)}>Show</Button>
-                        <Modal
-                          aria-labelledby="transition-modal-title"
-                          aria-describedby="transition-modal-description"
-                          className={(classes.modal, classes.root)}
-                          open={open}
-                          onClose={handleClose}
-                          closeAfterTransition
-                          BackdropComponent={Backdrop}
-                          BackdropProps={{
-                            timeout: 500,
-                          }}
-                        >
-                          <Fade in={open}>
-                            <div>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
-                                  <Grid container justify="center" spacing={3}>
-                                    {filteredJobs ? (
-                                      filteredJobs.map((val, ind) => {
-                                        let {
-                                          title,
-                                          experience,
-                                          description,
-                                          userName,
-                                          uid,
-                                        } = val;
+                    return (
+                      <TableRow key={uid}>
+                        <TableCell style={{ minWidth: 270 }}>{email}</TableCell>
+                        <TableCell style={{ minWidth: 160 }}>
+                          {password}
+                        </TableCell>
+                        <TableCell style={{ minWidth: 140 }}>{role}</TableCell>
+                        <TableCell style={{ minWidth: 140 }}>
+                          {userName}
+                        </TableCell>
+                        <TableCell>{blocked.toString()}</TableCell>
+                        <TableCell style={{ minWidth: 140 }}>
+                          <Button
+                            color="secondary"
+                            onClick={() => handleBlock(uid, blocked)}
+                          >
+                            {blocked ? "Unblock" : "block"}
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            color="secondary"
+                            onClick={() => handleVerified(uid, verified)}
+                          >
+                            {verified.toString()}
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => handleOpen(isJob)}>
+                            Show
+                          </Button>
+                          <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            className={(classes.modal, classes.root)}
+                            open={open}
+                            onClose={handleClose}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                              timeout: 500,
+                            }}
+                          >
+                            <Fade in={open}>
+                              <div>
+                                <Grid container spacing={3}>
+                                  <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Grid
+                                      container
+                                      justify="center"
+                                      spacing={3}
+                                    >
+                                      {filteredJobs ? (
+                                        filteredJobs.map((val, ind) => {
+                                          let {
+                                            title,
+                                            experience,
+                                            description,
+                                            userName,
+                                            uid,
+                                          } = val;
 
-                                        return (
-                                          <Grid
-                                            item
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={3}
-                                            alignContent="center"
-                                            alignItems="center"
-                                            justify="center"
-                                          >
-                                            <JobCard
-                                              key={uid}
-                                              title={title}
-                                              experience={experience}
-                                              description={description}
-                                              userName={userName}
-                                            />
-                                          </Grid>
-                                        );
-                                      })
-                                    ) : (
-                                      <div>No jobs</div>
-                                    )}
+                                          return (
+                                            <Grid
+                                              item
+                                              xs={12}
+                                              sm={6}
+                                              md={4}
+                                              lg={3}
+                                              alignContent="center"
+                                              alignItems="center"
+                                              justify="center"
+                                            >
+                                              <JobCard
+                                                key={uid}
+                                                title={title}
+                                                experience={experience}
+                                                description={description}
+                                                userName={userName}
+                                              />
+                                            </Grid>
+                                          );
+                                        })
+                                      ) : (
+                                        <Card>
+                                          <CardContent>
+                                            <h1>No Job</h1>
+                                          </CardContent>
+                                        </Card>
+                                      )}
+                                    </Grid>
                                   </Grid>
                                 </Grid>
-                              </Grid>
-                            </div>
-                          </Fade>
-                        </Modal>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                              </div>
+                            </Fade>
+                          </Modal>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10]}
+                    colSpan={3}
+                    count={SarayUsers?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      inputProps: { "aria-label": "rows per page" },
+                      native: true,
+                    }}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10]}
-                  colSpan={3}
-                  count={SarayUsers?.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "rows per page" },
-                    native: true,
-                  }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </div>
       </React.Fragment>
     );
   }

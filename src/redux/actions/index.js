@@ -44,6 +44,7 @@ import {
   VERIFYUSER_REQUEST,
   VERIFYUSER_SUCCESS,
   VERIFYUSER_FAILURE,
+  DRAWER_SUCCESS,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -281,6 +282,12 @@ const receiveVerifiedUser = () => {
 const verifiedUserError = () => {
   return {
     type: VERIFYUSER_FAILURE,
+  };
+};
+const drawerBool = (bool) => {
+  return {
+    type: DRAWER_SUCCESS,
+    payload: { bool },
   };
 };
 
@@ -615,6 +622,10 @@ export const verifiedUser = (uid, verified) => (dispatch) => {
     .catch(() => {
       dispatch(verifiedUserError());
     });
+};
+export const openingDrawer = (bool) => (dispatch) => {
+  console.log("SUCCESS BOOL");
+  dispatch(drawerBool(bool));
 };
 // export const studentJob = (
 //   uid,
