@@ -189,7 +189,7 @@ export default function Appbar({ props }) {
                 key={text}
                 onClick={() => history.push(`${props[index + 3].path}`)}
               >
-                {console.log(props)}
+                {/* {console.log(props)} */}
                 <ListItemIcon>
                   {index % 2 === 0 ? <BusinessIcon /> : <SchoolIcon />}
                 </ListItemIcon>

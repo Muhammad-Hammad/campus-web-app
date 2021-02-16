@@ -47,7 +47,7 @@ function AddJob() {
     experience: "",
     description: "",
   };
-  const { login, signup, userName, user } = state;
+  const { login, signup, userName, user,role } = state;
   const handleSubmit = (e, { resetForm }) => {
     dispatch(addJob(e.title, e.experience, e.description, user.uid, userName));
     resetForm({
@@ -59,6 +59,9 @@ function AddJob() {
     });
     history.push("/dashboard");
   };
+  if (role === "Admin" || role === "Student"){
+   return <Redirect to="/dashboard" />
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

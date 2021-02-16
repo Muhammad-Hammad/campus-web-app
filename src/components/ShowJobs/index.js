@@ -14,6 +14,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import Firebase from "firebase";
 import Loader from "../loader";
+import { Redirect } from "react-router";
 
 function ShowJobs() {
   const state = useSelector((state) => state.auth);
@@ -50,7 +51,6 @@ function ShowJobs() {
         .ref(`Users/${user.uid}/Jobs`)
         .on(`value`, (snapshot) => {
           const data = snapshot.val();
-          console.log("data company", data);
           const newData = data ? Object.keys(data) : [];
           setKey(newData);
         });
@@ -72,13 +72,14 @@ function ShowJobs() {
     dispatch(deleteCompanyJob(user.uid, key));
   };
   let _Jobs = Jobs ? Object.entries(Jobs) : [];
+  if (role == "Admin"){
+   return <Redirect to="/dashboard" />
+  }
   if (!role || MyJobs.loading) {
-    console.log(MyJobs.loading, role);
     return <Loader size={150} />;
-  } else if (role === "Student" || !MyJobs.loading) {
+  } else if (role === "Student") {
     return (
       <div className={classes.root}>
-        {/* {console.log("hello")} */}
         <Grid container>
           <Grid item xs={12}>
             <Grid container justify="center">
@@ -91,15 +92,12 @@ function ShowJobs() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Grid container justify="center" spacing={3}>
-              {console.log("_Jobs.length", _Jobs.length)}
-              {console.log("JobKey", jobKey.length)}
               {jobKey.length !== _Jobs.length ? (
                 _Jobs.map((val, ind) => {
                   let { title, experience, description, userName } = val[1];
-                  console.log("username", userName);
                   let key = val[0];
                   let flag = jobKey.includes(key);
-                  console.log("flag", flag);
+                 
                   if (!flag) {
                     return (
                       <Grid
@@ -143,6 +141,7 @@ function ShowJobs() {
       </div>
     );
   } else if (role === "Company") {
+    
     return (
       <div>
         <Grid container>
@@ -157,17 +156,13 @@ function ShowJobs() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Grid container justify="center" spacing={3}>
-              {console.log("_Jobs = ", _Jobs)}
-              {console.log("jobkey = ", jobKey)}
-              {console.log("_Jobs.length", _Jobs.length)}
-              {console.log("JobKey", jobKey.length)}
-              {jobKey.length === _Jobs.length &&
+              {
               (jobKey.length !== 0 || _Jobs.length !== 0) ? (
                 _Jobs.map((val, ind) => {
                   let { title, experience, description } = val[1];
                   let key = val[0];
                   let flag = jobKey.includes(key);
-                  console.log("flag", flag);
+               
                   if (flag) {
                     return (
                       <Grid

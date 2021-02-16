@@ -45,6 +45,32 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    ':focus': {
+      outline: "none",
+    outlineColor: "-webkit-focus-ring-color",
+    outlineStyle: "none",
+    outlineWidth: "0px",
+    }
+  },
+  fade:{
+    flexGrow: 1,
+    
+    ':focus': {
+      outline: "none",
+    outlineColor: "-webkit-focus-ring-color",
+    outlineStyle: "none",
+    outlineWidth: "0px",
+    }
+    // backgroundColor: "orange",
+  },
+  grid:{
+    ':focus': {
+      outline: "none",
+    outlineColor: "-webkit-focus-ring-color",
+    outlineStyle: "none",
+    outlineWidth: "0px",
+    }
+    // backgroundColor: "green",
   },
   root: {
     flexGrow: 1,
@@ -272,7 +298,7 @@ export default function AdminTable() {
                           <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
-                            className={(classes.modal, classes.root)}
+                            className={(classes.modal)}
                             open={open}
                             onClose={handleClose}
                             closeAfterTransition
@@ -281,16 +307,18 @@ export default function AdminTable() {
                               timeout: 500,
                             }}
                           >
-                            <Fade in={open}>
-                              <div>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Fade in={open} >
+                              <div className={classes.fade}>
+                                <Grid container spacing={3} className={classes.grid}>
+                                  
+                                  <Grid item xs={10} sm={12} md={12} lg={12}>
+                                  {/* <h1 className={classes.modal}>Jobs</h1> */}
                                     <Grid
                                       container
                                       justify="center"
                                       spacing={3}
-                                    >
-                                      {filteredJobs ? (
+                                    > 
+                                      {!!filteredJobs.length ? (
                                         filteredJobs.map((val, ind) => {
                                           let {
                                             title,
@@ -299,11 +327,11 @@ export default function AdminTable() {
                                             userName,
                                             uid,
                                           } = val;
-
+                                          console.log("chalti hai kia no se 12")
                                           return (
                                             <Grid
                                               item
-                                              xs={12}
+                                              xs={10}
                                               sm={6}
                                               md={4}
                                               lg={3}

@@ -18,16 +18,9 @@ function App() {
     userName,
     drawer,
   } = state;
-  // console.log(role, user.email);
-  // useEffect(() => {
-  //   if (!role) {
-  //     dispatch(detectRole(user?.uid));
-  //   }
-  // }, [user]);
-  // console.log("username", userName);
+ 
   let check = Object.keys(user).length === 0 && user.constructor === Object;
   if (verify.verifying || login.loading) {
-    console.log("main chala");
     return <Loader size={300} />;
   } else {
     return <RenderRoutes routes={ROUTES} />;

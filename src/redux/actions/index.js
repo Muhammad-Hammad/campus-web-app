@@ -354,7 +354,6 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
     .createUserWithEmailAndPassword(email, password)
     .then((user) => {
       let UID = Firebase.auth().currentUser?.uid;
-      console.log(UID);
       Firebase.database().ref(`/Users/${UID}`).set({
         uid: UID,
         userName: userName,
@@ -375,7 +374,6 @@ export const signupUser = (userName, email, password, role) => (dispatch) => {
 export const verifyAuth = () => (dispatch) => {
   dispatch(verifyRequest());
   Firebase.auth().onAuthStateChanged((user) => {
-    // console.log("user from verify auth", user);
     if (user !== null) {
       dispatch(requestLogin());
       Firebase.database()
@@ -390,7 +388,7 @@ export const verifyAuth = () => (dispatch) => {
                 dispatch(receiveLogout());
               });
           } else {
-            // console.log("chal ra hun");
+            
             dispatch(receiveLogin(user, role));
           }
         });
@@ -481,7 +479,7 @@ export const studentJob = (uid, key) => (dispatch) => {
     .then(() => {
       Firebase.database().ref(`/Jobs/${key}`).update(updates1);
       dispatch(receiveAddJob());
-      console.log("success");
+      
     })
     .catch((err) => {
       dispatch(studentJobError());
@@ -500,7 +498,6 @@ export const deleteStudentJob = (uid, key) => (dispatch) => {
     .then(() => {
       Firebase.database().ref(`/Jobs/${key}`).update(updates1);
       dispatch(receiveDeleteStudentJob());
-      console.log("success");
     })
     .catch((err) => {
       dispatch(deleteStudentJobError());
@@ -510,8 +507,6 @@ export const deleteCompanyJob = (uid, key) => (dispatch) => {
   dispatch(requestDeleteCompanyJob());
   let updates = {};
   let updates1 = {};
-  console.log("key from Delte company", key);
-  console.log("uid from company", uid);
   updates1[`${key}`] = null;
   updates[`/Jobs/${key}`] = null;
   Firebase.database()
@@ -520,7 +515,6 @@ export const deleteCompanyJob = (uid, key) => (dispatch) => {
     .then(() => {
       Firebase.database().ref(`/Jobs/`).update(updates1);
       dispatch(receiveDeleteCompanyJob());
-      console.log("success");
     })
     .catch((err) => {
       dispatch(deleteCompanyJobError());
@@ -534,9 +528,8 @@ export const getAllUsers = () => (dispatch) => {
       `value`,
       (snapshot) => {
         const data = snapshot.val();
-        // console.log("data agia saray k saray user", data);
+      
         const newdata = Object.entries(data);
-        // console.log("newData", newdata);
         dispatch(receiveAllUsers(newdata));
       },
       () => {
@@ -553,7 +546,6 @@ export const BlockUser = (uid, blocked) => (dispatch) => {
     .update(updates)
     .then(() => {
       dispatch(receiveBlockUser());
-      // console.log("success");
     })
     .catch(() => {
       dispatch(blockUserError());
@@ -585,7 +577,6 @@ export const getCompanyJobs = (uid) => (dispatch) => {
       `value`,
       (snapshot) => {
         const data = snapshot.val();
-        // console.log("checkData", data);
         dispatch(receiveMyJobs(data));
       },
       () => {
@@ -617,36 +608,11 @@ export const verifiedUser = (uid, verified) => (dispatch) => {
     .update(updates)
     .then(() => {
       dispatch(receiveVerifiedUser());
-      // console.log("success");
     })
     .catch(() => {
       dispatch(verifiedUserError());
     });
 };
 export const openingDrawer = (bool) => (dispatch) => {
-  console.log("SUCCESS BOOL");
   dispatch(drawerBool(bool));
 };
-// export const studentJob = (
-//   uid,
-//   { description, experience, title, userName }
-// ) => (dispatch) => {
-//   dispatch(requestStudentJob());
-//   const newData = {
-//     title,
-//     experience,
-//     description,
-//     userName,
-//   };
-//   let updates = {};
-//   updates[`/Jobs/`] = newData;
-//   Firebase.database()
-//     .ref(`/Users/${uid}`)
-//     .update(updates)
-//     .then(() => {
-//       dispatch(receiveStudentJob(newData));
-//     })
-//     .catch((error) => {
-//       dispatch(studentJobError());
-//     });
-// };
