@@ -11,7 +11,7 @@ function AdminPanel() {
   const useStyles = makeStyles((theme) => ({
     root: {
       display: "flex",
-      marginLeft: drawer ? "250px" : "82px",
+      marginLeft: drawer ? "250px" : "0px",
       transition: "0.3s ease",
     },
 
@@ -28,8 +28,8 @@ function AdminPanel() {
     dispatch(getAllJobs());
   }, [user]);
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
+    <div className={`${classes.root}`}>
+      <Paper className={`${classes.paper} container mx-auto`}>
         <AdminTable />
       </Paper>
     </div>

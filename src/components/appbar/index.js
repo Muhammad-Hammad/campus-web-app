@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -24,6 +24,7 @@ import { Redirect, useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import BusinessIcon from "@material-ui/icons/Business";
 import SchoolIcon from "@material-ui/icons/School";
+import { validateYupSchema } from "formik";
 
 const drawerWidth = 240;
 
@@ -114,13 +115,33 @@ export default function Appbar({ props }) {
     setOpen(true);
     dispatch(openingDrawer(true));
   };
-
+ const appRoutes = [{
+   title: "Dashboard",
+   path: "/dashboard",
+ },
+ {
+  title: "Add Job",
+  path: "/dashboard/addjob",
+ },
+ {
+  title: "Show Job",
+  path: "/dashboard/showjob",
+ },
+ {
+  title: "Student Job",
+  path: "/dashboard/studentjob",
+ }
+]
   const handleDrawerClose = () => {
     setOpen(false);
     dispatch(openingDrawer(false));
   };
   let check = Object.keys(user).length === 0 && user.constructor === Object;
-
+  useEffect(() => {
+    if(role === "Admin"){
+      dispatch(openingDrawer(false));
+    }
+  }, [user])
   if (check) {
     return <Redirect to="/" />;
   } else {
@@ -129,11 +150,13 @@ export default function Appbar({ props }) {
         <CssBaseline />
         <AppBar
           position="fixed"
-          className={clsx(classes.appBar, {
+          className={`${clsx(classes.appBar, {
             [classes.appBarShift]: open,
-          })}
+          })} bg-gray-500 bg-gradient-to-r from-red-500 ...`}
         >
           <Toolbar>
+          {role !== "Admin" ?(
+            <>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -145,12 +168,14 @@ export default function Appbar({ props }) {
             >
               <MenuIcon />
             </IconButton>
-
+           
             <Typography variant="h6">
               <Button color="inherit" onClick={() => history.goBack()}>
                 <ArrowBackIcon />
               </Button>
             </Typography>
+            </>
+           ): null }
             <Typography variant="h6" noWrap className={classes.title}>
               {userName ? userName : "Dashboard"}
             </Typography>
@@ -159,6 +184,7 @@ export default function Appbar({ props }) {
             </Button>
           </Toolbar>
         </AppBar>
+        {role !== "Admin" ?(
         <Drawer
           variant="permanent"
           className={clsx(classes.drawer, {
@@ -183,28 +209,54 @@ export default function Appbar({ props }) {
           </div>
           <Divider />
           <List>
-            {["Dashboard", "My Jobs", "Show All Jobs"].map((text, index) => (
+            
+            {appRoutes.map((val, index) => {
+              let {title,path} = val;
+              if(title === "Add Job" && role === "Student"){
+                return(null);
+              }
+              else if(title === "Student Job" && role === "Company"){
+           return (
               <ListItem
                 button
-                key={text}
-                onClick={() => history.push(`${props[index + 3].path}`)}
+                key={title}
+                onClick={() => history.push(`${path}`)}
               >
-                {/* {console.log(props)} */}
+                {console.log(props)}
                 <ListItemIcon>
                   {index % 2 === 0 ? <BusinessIcon /> : <SchoolIcon />}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={title} />
               </ListItem>
-            ))}
+            )
+          }
+          else {
+            return (
+              <ListItem
+                button
+                key={title}
+                onClick={() => history.push(`${path}`)}
+              >
+                {console.log(props)}
+                <ListItemIcon>
+                  {index % 2 === 0 ? <BusinessIcon /> : <SchoolIcon />}
+                </ListItemIcon>
+                <ListItemText primary={title} />
+              </ListItem>
+            )
+          }
+        })
+        }
           </List>
         </Drawer>
-
+        )
+  : (<div></div>)}
         <main className={classes.content}></main>
+        {role === "Admin" ? (<div className={classes.toolbar} />) : null}
       </div>
     );
   }
 }
-
 // import { useDispatch, useSelector } from "react-redux";
 // import { logoutUser } from "../../redux/actions";
 // import { makeStyles } from "@material-ui/core/styles";

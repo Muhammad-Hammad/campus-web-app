@@ -120,7 +120,7 @@ function ForgotPassword() {
                   className={classes.submit}
                   disabled={!dirty}
                 >
-                  {!forgot.loading ? "Submit" : <Loader />}
+                  {!forgot.loading ? "Submit" : <Loader size ={24}/>}
                 </Button>
                 {!forgot.loading && show && (
                   <Alert severity={forgot.error ? "error" : "success"}>

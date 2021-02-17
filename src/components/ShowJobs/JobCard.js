@@ -87,7 +87,7 @@ export default function JobCard({
   // console.log(location);
 
   return (
-    <Card className={classes.root}>
+    <Card className={`${classes.root}`}>
       <CardContent>
         {role === "Student" || role === "Admin" ? (
           <Typography variant="h5" component="h2" className={classes.title}>
@@ -119,7 +119,7 @@ export default function JobCard({
             timeout: 500,
           }}
         >
-          <Fade in={open}>
+          <Fade in={open} className="border border-transparent focus:outline-none focus:border-transparent">
             <Card>
               <CardContent>
                 <Typography

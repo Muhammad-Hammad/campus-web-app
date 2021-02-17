@@ -27,8 +27,12 @@ import {
   Button,
   Card,
   CardContent,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   TableContainer,
   Typography,
 } from "@material-ui/core";
@@ -81,6 +85,10 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
 }));
 
@@ -171,28 +179,28 @@ export default function AdminTable() {
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
+  const [filters,setFilters] = useState("All")
   const { AllUsers, user, GetAllUsers, AllJobs } = state;
   useEffect(() => {
     dispatch(getAllUsers());
     dispatch(getAllJobs());
   }, [user]);
-  const [SarayUsers] = AllUsers ? AllUsers : [];
+  const [ newAllUsers] = AllUsers ? AllUsers : [];
   const handleBlock = (uid, blocked) => {
     dispatch(BlockUser(uid, blocked));
   };
   const handleVerified = (uid, verified) => {
     dispatch(verifiedUser(uid, verified));
   };
-  const [SaariJobs] = AllJobs;
-  const Joby = SaariJobs ? Object.entries(SaariJobs) : [];
+  const [newAllJobs] = AllJobs;
+  const ExistingJobs = newAllJobs ? Object.entries(newAllJobs) : [];
   const [open, setOpen] = useState(false);
   const [filteredJobs, setFjobs] = useState([]);
 
   const handleOpen = (jobs) => {
     setOpen(true);
     let Fjobs = [];
-    Joby.filter((val, ind) => {
+    ExistingJobs.filter((val, ind) => {
       if (jobs.includes(val[0])) {
         return Fjobs.push(val[1]);
       }
@@ -209,7 +217,7 @@ export default function AdminTable() {
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, SarayUsers?.length - page * rowsPerPage - 1);
+    Math.min(rowsPerPage, newAllUsers?.length - page * rowsPerPage - 1);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -219,37 +227,51 @@ export default function AdminTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+console.log("filters",filters);
+let search
   if (GetAllUsers?.loading || !AllUsers) {
     return <Loader />;
   } else if (!GetAllUsers.loading) {
     return (
       <React.Fragment>
-        <div className={classes.root}>
+        <div className={`${classes.root} `}>
+        <FormControl>
+        <InputLabel id="demo-simple-select-label">Filtered By</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={filters}
+          onChange={(e)=> setFilters(e.target.value)}
+        >
+          <MenuItem value={`All`}>All</MenuItem>
+          <MenuItem value={`Student`}>Student</MenuItem>
+          <MenuItem value={`Company`}>Company</MenuItem>
+        </Select>
+      </FormControl>
           {/* <Title>Recent Orders</Title> */}
           <TableContainer component={Paper}>
             <Table size="small">
-              <TableHead>
+              <TableHead class={classes.tableHead}>
                 <TableRow>
-                  <TableCell style={{ minWidth: 270 }}>Email</TableCell>
-                  <TableCell style={{ minWidth: 160 }}>Password</TableCell>
-                  <TableCell style={{ minWidth: 140 }}>Role</TableCell>
-                  <TableCell style={{ minWidth: 140 }}>UserName</TableCell>
-                  <TableCell>Blocked</TableCell>
-                  <TableCell style={{ minWidth: 140, paddingLeft: "26px" }}>
+                  <TableCell style={{ minWidth: 270,fontWeight: "bold " }}>Email</TableCell>
+                  <TableCell style={{ minWidth: 160,fontWeight: "bold "  }}>Password</TableCell>
+                  <TableCell style={{ minWidth: 140,fontWeight: "bold "  }}>Role</TableCell>
+                  <TableCell style={{ minWidth: 140,fontWeight: "bold "  }}>UserName</TableCell>
+                  <TableCell style={{fontWeight: "bold " }}>Blocked</TableCell>
+                  <TableCell style={{ minWidth: 140, paddingLeft: "26px",fontWeight: "bold "  }}>
                     Status
                   </TableCell>
-                  <TableCell style={{ minWidth: 140 }}>Verification</TableCell>
-                  <TableCell style={{ minWidth: 140 }}>Jobs</TableCell>
+                  <TableCell style={{ minWidth: 140,fontWeight: "bold "  }}>Verification</TableCell>
+                  <TableCell style={{ minWidth: 150,paddingLeft: "30px",fontWeight: "bold "  }}>Jobs</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? SarayUsers.slice(
+                  ? newAllUsers.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : SarayUsers
+                  : newAllUsers
                 ).map((row) => {
                   let {
                     email,
@@ -262,6 +284,7 @@ export default function AdminTable() {
                     verified,
                   } = row[1];
                   if (role !== "Admin") {
+                    if(filters === role || filters === "All"){
                     let isJob = Jobs ? Object.keys(Jobs) : [];
 
                     return (
@@ -298,7 +321,7 @@ export default function AdminTable() {
                           <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
-                            className={(classes.modal)}
+                            className={classes.modal}
                             open={open}
                             onClose={handleClose}
                             closeAfterTransition
@@ -308,15 +331,16 @@ export default function AdminTable() {
                             }}
                           >
                             <Fade in={open} >
-                              <div className={classes.fade}>
-                                <Grid container spacing={3} className={classes.grid}>
+                              <div className={`${classes.fade} border border-transparent focus:outline-none focus:border-transparent ...`}>
+                                <Grid container spacing={3} item className="border border-transparent focus:outline-none focus:border-transparent  ..."  >
                                   
-                                  <Grid item xs={10} sm={12} md={12} lg={12}>
+                                  {/* <Grid item xs={10} sm={12} md={12} lg={12}  className=" border border-transparent focus:outline-none focus:border-transparent bg-gradient-to-r from-green-400 to-blue-500 focus:from-pink-500 focus:to-yellow-500..."> */}
                                   {/* <h1 className={classes.modal}>Jobs</h1> */}
                                     <Grid
                                       container
                                       justify="center"
                                       spacing={3}
+                                      className="border border-transparent focus:outline-none focus:border-transparent ..."
                                     > 
                                       {!!filteredJobs.length ? (
                                         filteredJobs.map((val, ind) => {
@@ -327,7 +351,6 @@ export default function AdminTable() {
                                             userName,
                                             uid,
                                           } = val;
-                                          console.log("chalti hai kia no se 12")
                                           return (
                                             <Grid
                                               item
@@ -352,11 +375,11 @@ export default function AdminTable() {
                                       ) : (
                                         <Card>
                                           <CardContent>
-                                            <h1>No Job</h1>
+                                            <Typography variant="h4">Currently, There are no Jobs associated with this user</Typography>
                                           </CardContent>
                                         </Card>
                                       )}
-                                    </Grid>
+                                    {/* </Grid> */}
                                   </Grid>
                                 </Grid>
                               </div>
@@ -364,7 +387,7 @@ export default function AdminTable() {
                           </Modal>
                         </TableCell>
                       </TableRow>
-                    );
+                    );}
                   }
                 })}
                 {emptyRows > 0 && (
@@ -378,7 +401,7 @@ export default function AdminTable() {
                   <TablePagination
                     rowsPerPageOptions={[5, 10]}
                     colSpan={3}
-                    count={SarayUsers?.length}
+                    count={newAllUsers?.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
@@ -430,7 +453,7 @@ export default function AdminTable() {
 //   const dispatch = useDispatch();
 //   const { AllUsers, user, GetAllUsers, AllJobs } = state;
 
-//   const [SarayUsers] = AllUsers ? AllUsers : [];
+//   const [newAllUsers] = AllUsers ? AllUsers : [];
 //   const handleBlock = (uid, blocked) => {
 //     dispatch(BlockUser(uid, blocked));
 //   };
@@ -438,16 +461,16 @@ export default function AdminTable() {
 //     dispatch(verifiedUser(uid, verified));
 //   };
 //   // console.log("all", AllJobs);
-//   const [SaariJobs] = AllJobs;
-//   // console.log("saari", SaariJobs);
-//   const Joby = SaariJobs ? Object.entries(SaariJobs) : [];
+//   const [newAllJobs] = AllJobs;
+//   // console.log("saari", newAllJobs);
+//   const ExistingJobs = newAllJobs ? Object.entries(newAllJobs) : [];
 //   const [open, setOpen] = useState(false);
 //   const [filteredJobs, setFjobs] = useState([]);
 
 //   const handleOpen = (jobs) => {
 //     setOpen(true);
 //     let Fjobs = [];
-//     Joby.filter((val, ind) => {
+//     ExistingJobs.filter((val, ind) => {
 //       if (jobs.includes(val[0])) {
 //         return Fjobs.push(val[1]);
 //       }
@@ -479,7 +502,7 @@ export default function AdminTable() {
 //             </TableRow>
 //           </TableHead>
 //           <TableBody>
-//             {SarayUsers.map((row) => {
+//             {newAllUsers.map((row) => {
 
 //               let {
 //                 email,

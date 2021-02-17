@@ -146,6 +146,7 @@ function Signin() {
                   // </Typography>
                   <Alert severity="error">{login.errorMsg}</Alert>
                 )}
+                <br/>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Role</FormLabel>
                   <RadioGroup
@@ -184,14 +185,14 @@ function Signin() {
                   {!login.loading ? "Sign in" : <Loader size={24} />}
                 </Button>
                 <Grid container justify="flex-end">
-                  <Grid item xs>
+                  <Grid item xs={5}>
                     <Link to="/forgotPassword" variant="body2">
                       Forgot password?
                     </Link>
                   </Grid>
-                  <Grid item>
+                  <Grid item xs={7}>
                     <Link to="/signup" variant="body2">
-                      Don't have an account? Sign Up
+                      Don't have an account? Sign Up!
                     </Link>
                   </Grid>
                 </Grid>
