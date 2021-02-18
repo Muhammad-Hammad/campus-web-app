@@ -31,6 +31,8 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    paddingLeft: 0,
+    paddingRight: 0,  
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -73,8 +75,11 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     width: theme.spacing(7) + 1,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
+      width: theme.spacing(7) + 1,
     },
+    [theme.breakpoints.down("xs")]: {
+      width: theme.spacing(0),
+    }
   },
   toolbar: {
     display: "flex",
@@ -149,10 +154,11 @@ export default function Appbar({ props }) {
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
+          xs={12}
           position="fixed"
           className={`${clsx(classes.appBar, {
             [classes.appBarShift]: open,
-          })} bg-gray-500 bg-gradient-to-r from-red-500 ...`}
+          })} bg-gray-500 bg-gradient-to-r from-red-500 box-border ...`}
         >
           <Toolbar>
           {role !== "Admin" ?(
@@ -187,10 +193,10 @@ export default function Appbar({ props }) {
         {role !== "Admin" ?(
         <Drawer
           variant="permanent"
-          className={clsx(classes.drawer, {
+          className={`${clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          })}
+          })}`}
           classes={{
             paper: clsx({
               [classes.drawerOpen]: open,
@@ -208,7 +214,7 @@ export default function Appbar({ props }) {
             </IconButton>
           </div>
           <Divider />
-          <List>
+          <List >
             
             {appRoutes.map((val, index) => {
               let {title,path} = val;
@@ -217,17 +223,7 @@ export default function Appbar({ props }) {
               }
               else if(title === "Student Job" && role === "Company"){
            return (
-              <ListItem
-                button
-                key={title}
-                onClick={() => history.push(`${path}`)}
-              >
-                {console.log(props)}
-                <ListItemIcon>
-                  {index % 2 === 0 ? <BusinessIcon /> : <SchoolIcon />}
-                </ListItemIcon>
-                <ListItemText primary={title} />
-              </ListItem>
+             null
             )
           }
           else {
@@ -236,6 +232,7 @@ export default function Appbar({ props }) {
                 button
                 key={title}
                 onClick={() => history.push(`${path}`)}
+                
               >
                 {console.log(props)}
                 <ListItemIcon>

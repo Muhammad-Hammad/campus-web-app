@@ -8,6 +8,7 @@ import Appbar from "./appbar";
 import Test from "./test";
 import AdminTable from "./admin/AdminTable";
 import AdminPanel from "./admin";
+import Loader from "./loader";
 
 Firebase.initializeApp(firebaseConfig);
 
@@ -16,7 +17,7 @@ function Root() {
   return (
     <Provider store={store}>
       <Router>
-        <App />
+        <App/>
       </Router>
     </Provider>
   );

@@ -25,7 +25,11 @@ function ShowJobs() {
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
-      marginLeft: drawer ? "250px" : "82px",
+      paddingLeft: drawer ? "250px" : "10%",
+      [theme.breakpoints.up("sm")]: {
+        paddingLeft: theme.spacing(9) + 1,
+      },
+      boxSizing: "border-box",
       transition: "0.3s ease",
     },
     menuButton: {
@@ -91,7 +95,8 @@ function ShowJobs() {
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Grid container justify="center" spacing={3}>
+            <Grid container justify="center" spacing={3} xs={12}>
+              {console.log(jobKey,_Jobs)}
               {jobKey.length !== _Jobs.length ? (
                 _Jobs.map((val, ind) => {
                   let { title, experience, description, userName } = val[1];

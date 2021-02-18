@@ -16,8 +16,8 @@ import { useState } from "react";
 import { Modal } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
-    maxWidth: 300,
+    // minWidth: 275,
+    maxWidth: "100%",
     minHeight: 300,
     maxHeight: 300,
     padding: 20,

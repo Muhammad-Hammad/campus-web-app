@@ -11,7 +11,7 @@ const override = css`
 
 function Loader(props) {
   return (
-    <div>
+    <div className="flex items-center h-screen">
       <PuffLoader loading={props.loading} css={override} size={props.size} />
     </div>
   );
