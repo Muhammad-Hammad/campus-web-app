@@ -588,7 +588,7 @@ export default function Auth(state = initState, action) {
           success: true,
           errorMsg: "",
         },
-        AllJobs: [action?.payload?.data],
+        AllJobs: action?.payload?.data,
       };
     }
     case ALLJOBS_FAILURE: {
