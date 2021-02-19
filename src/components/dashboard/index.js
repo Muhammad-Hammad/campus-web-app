@@ -30,11 +30,6 @@ function Dashboard({ routes }) {
   const dispatch = useDispatch();
   const { role, userName, user } = state;
 
-  useEffect(() => {
-    if (role === "Admin") {
-      dispatch(getAllUsers());
-    }
-  }, [user]);
   if (!role) {
     return <Loader size={300} />;
   } else if (role === "Admin") {

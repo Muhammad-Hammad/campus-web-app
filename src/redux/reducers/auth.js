@@ -44,6 +44,12 @@ import {
   VERIFYUSER_SUCCESS,
   VERIFYUSER_FAILURE,
   DRAWER_SUCCESS,
+  STUDENT_REQUEST,
+  STUDENT_SUCCESS,
+  STUDENT_FAILURE,
+  COMPANY_REQUEST,
+  COMPANY_SUCCESS,
+  COMPANY_FAILURE,
 } from "../constants";
 
 const initState = {
@@ -134,12 +140,26 @@ const initState = {
     success: false,
     errorMsg: "",
   },
+  Companies: {
+    loading: true,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
+  Students: {
+    loading: true,
+    error: false,
+    success: false,
+    errorMsg: "",
+  },
   AllUsers: [],
   user: {},
   role: "",
   userName: "",
   Jobs: [],
   AllJobs: [],
+  AllCompany:[],
+  AllStudent: [],
   drawer: false,
 };
 export default function Auth(state = initState, action) {
@@ -501,7 +521,7 @@ export default function Auth(state = initState, action) {
           success: true,
           errorMsg: "",
         },
-        AllUsers: [action?.payload?.data],
+        AllUsers: action?.payload?.data,
       };
     }
     case GETALLUSERS_FAILURE: {
@@ -620,6 +640,74 @@ export default function Auth(state = initState, action) {
         ...state,
         drawer: action?.payload?.bool,
       };
+    }
+    case STUDENT_REQUEST:{
+      return {
+        ...state,
+        Student: {
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        }
+      }
+    }
+    case STUDENT_SUCCESS:{
+      return {
+        ...state,
+        Student:{
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+        AllStudent: [action?.payload?.data]
+      }
+    }
+    case STUDENT_FAILURE:{
+      return {
+        ...state,
+        Student:{
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        }
+      }
+    }
+    case COMPANY_REQUEST:{
+      return{
+        ...state,
+        Company:{
+          loading: true,
+          error: false,
+          success: false,
+          errorMsg: "",
+        }
+      }
+    }
+    case COMPANY_SUCCESS:{
+      return{
+        ...state,
+        Company:{
+          loading: false,
+          error: false,
+          success: true,
+          errorMsg: "",
+        },
+        AllCompany: [action?.payload?.data]
+      }
+    }
+    case COMPANY_FAILURE:{
+      return{
+        ...state,
+        Company:{
+          loading: false,
+          error: true,
+          success: false,
+          errorMsg: "",
+        }
+      }
     }
     default:
       return state;

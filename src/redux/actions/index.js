@@ -45,6 +45,12 @@ import {
   VERIFYUSER_SUCCESS,
   VERIFYUSER_FAILURE,
   DRAWER_SUCCESS,
+  STUDENT_SUCCESS,
+  STUDENT_FAILURE,
+  COMPANY_REQUEST,
+  COMPANY_SUCCESS,
+  COMPANY_FAILURE,
+  STUDENT_REQUEST,
 } from "../constants";
 const requestLogin = () => {
   return {
@@ -290,6 +296,38 @@ const drawerBool = (bool) => {
     payload: { bool },
   };
 };
+const requestStudent = () =>{
+  return {
+    type: STUDENT_REQUEST,
+  }
+}
+const receiveStudent = (data) =>{
+  return {
+    type: STUDENT_SUCCESS,
+    payload: { data }
+  }
+}
+const studentError = ()=>{
+  return {
+    type: STUDENT_FAILURE,
+  }
+}
+const requestCompany = () =>{
+  return {
+    type: COMPANY_REQUEST,
+  }
+}
+const receiveCompany = (data) =>{
+  return {
+    type: COMPANY_SUCCESS,
+    payload: {data},
+  }
+}
+const companyError = () =>{
+  return {
+    type: COMPANY_FAILURE,
+  }
+}
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -529,7 +567,7 @@ export const getAllUsers = () => (dispatch) => {
       (snapshot) => {
         const data = snapshot.val();
       
-        const newdata = Object.entries(data);
+        const newdata = Object.values(data);
         dispatch(receiveAllUsers(newdata));
       },
       () => {
@@ -616,3 +654,40 @@ export const verifiedUser = (uid, verified) => (dispatch) => {
 export const openingDrawer = (bool) => (dispatch) => {
   dispatch(drawerBool(bool));
 };
+
+export const getAllStudent = () => (dispatch) =>{
+  dispatch(requestStudent());
+  Firebase.database()
+    .ref(`Users/`)
+    .orderByChild("role")
+    .equalTo("Student")
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        // console.log("Student data",data);
+        dispatch(receiveStudent(data));
+      },
+      () => {
+        dispatch(studentError());
+      }
+    );
+}
+export const getAllCompany = () => (dispatch) =>{
+  dispatch(requestCompany());
+  Firebase.database()
+    .ref(`Users/`)
+    .orderByChild("role")
+    .equalTo("Company")
+    .on(
+      `value`,
+      (snapshot) => {
+        const data = snapshot.val();
+        // console.log("Company data",data);
+        dispatch(receiveCompany(data));
+      },
+      () => {
+        dispatch(companyError());
+      }
+    );
+}

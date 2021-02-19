@@ -180,12 +180,9 @@ export default function AdminTable() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [filters,setFilters] = useState("All")
-  const { AllUsers, user, GetAllUsers, AllJobs } = state;
-  useEffect(() => {
-    dispatch(getAllUsers());
-    dispatch(getAllJobs());
-  }, [user]);
-  const [ newAllUsers] = AllUsers ? AllUsers : [];
+  const { AllUsers, user, GetAllUsers, AllJobs, AllStudent, AllCompany } = state;
+
+  
   const handleBlock = (uid, blocked) => {
     dispatch(BlockUser(uid, blocked));
   };
@@ -212,10 +209,32 @@ export default function AdminTable() {
     setOpen(false);
   };
 
+  let [ newAllUsers] = AllUsers ? AllUsers : [];
+  let [newAllStudent] = AllStudent ? AllStudent : [];
+  let [newAllCompany] = AllCompany ? AllCompany : [];
+  let [allData, setAllData] = useState(newAllUsers);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [emptyRows,setEmptyRows] = useState(0);
 
-  const emptyRows =
+  const pressF = (filterVal) =>{
+     if(filterVal === "All"){
+      setAllData(newAllUsers);
+      setEmptyRows(rowsPerPage -
+        Math.min(rowsPerPage, newAllUsers?.length - page * rowsPerPage - 1))
+      }
+      else if (filterVal === "Student"){
+        setAllData(newAllStudent);
+        setEmptyRows(rowsPerPage -
+          Math.min(rowsPerPage, newAllStudent?.length - page * rowsPerPage - 1))
+        }
+      else if (filterVal === "Company"){
+        setAllData(newAllCompany);
+        setEmptyRows(rowsPerPage -
+          Math.min(rowsPerPage, newAllCompany?.length - page * rowsPerPage - 1))
+      }
+  }
+  const emptyRowsForAll =
     rowsPerPage -
     Math.min(rowsPerPage, newAllUsers?.length - page * rowsPerPage - 1);
 
@@ -227,21 +246,24 @@ export default function AdminTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-console.log("filters",filters);
-let search
+  const handleFilter = (e) =>{
+    setFilters(e.target.value);
+    pressF(e.target.value);
+  }
+
   if (GetAllUsers?.loading || !AllUsers) {
     return <Loader />;
   } else if (!GetAllUsers.loading) {
     return (
       <React.Fragment>
         <div className={`${classes.root} `}>
-        <FormControl>
+        <FormControl className="w-2/5 md:w-1/12">
         <InputLabel id="demo-simple-select-label">Filtered By</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={filters}
-          onChange={(e)=> setFilters(e.target.value)}
+          onChange={(e)=> handleFilter(e)}
         >
           <MenuItem value={`All`}>All</MenuItem>
           <MenuItem value={`Student`}>Student</MenuItem>
@@ -267,11 +289,11 @@ let search
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? newAllUsers.slice(
+                  ? allData?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : newAllUsers
+                  : allData
                 ).map((row) => {
                   let {
                     email,
@@ -284,7 +306,7 @@ let search
                     verified,
                   } = row[1];
                   if (role !== "Admin") {
-                    if(filters === role || filters === "All"){
+                    // if(filters === role || filters === "All"){
                     let isJob = Jobs ? Object.keys(Jobs) : [];
 
                     return (
@@ -388,7 +410,7 @@ let search
                         </TableCell>
                       </TableRow>
                     );}
-                  }
+                  // }
                 })}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>

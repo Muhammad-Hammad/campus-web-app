@@ -1,8 +1,9 @@
 import { makeStyles, Paper } from "@material-ui/core";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BlockUser, getAllJobs, getAllUsers } from "../../redux/actions";
+import { BlockUser, getAllCompany, getAllJobs, getAllStudent, getAllUsers } from "../../redux/actions";
 import AdminTable from "./AdminTable";
+import Test from "../test";
 
 function AdminPanel() {
   const dispatch = useDispatch();
@@ -30,7 +31,8 @@ function AdminPanel() {
   return (
     <div className={`${classes.root}`}>
       <Paper className={`${classes.paper} container mx-auto`}>
-        <AdminTable />
+       <Test />
+        {/* <AdminTable /> */}
       </Paper>
     </div>
   );
