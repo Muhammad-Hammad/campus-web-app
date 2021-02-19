@@ -1,0 +1,12 @@
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+/* .root {
+  flex-grow: 1 !important;
+}
+.rendering-zone {
+  overflow-x: scroll !important;
+} */
+.MuiDataGrid-colCellCenter {
+  text-align: center !important;
+}
