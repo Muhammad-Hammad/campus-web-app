@@ -107,10 +107,10 @@ const requestSignup = () => {
     type: SIGNUP_REQUEST,
   };
 };
-const receiveSignup = (user, role) => {
+const receiveSignup = () => {
   return {
     type: SIGNUP_SUCCESS,
-    payload: { user, role },
+    // payload: { user, role,userName },
   };
 };
 const signupError = (error) => {
@@ -296,38 +296,38 @@ const drawerBool = (bool) => {
     payload: { bool },
   };
 };
-const requestStudent = () =>{
+const requestStudent = () => {
   return {
     type: STUDENT_REQUEST,
-  }
-}
-const receiveStudent = (data) =>{
+  };
+};
+const receiveStudent = (data) => {
   return {
     type: STUDENT_SUCCESS,
-    payload: { data }
-  }
-}
-const studentError = ()=>{
+    payload: { data },
+  };
+};
+const studentError = () => {
   return {
     type: STUDENT_FAILURE,
-  }
-}
-const requestCompany = () =>{
+  };
+};
+const requestCompany = () => {
   return {
     type: COMPANY_REQUEST,
-  }
-}
-const receiveCompany = (data) =>{
+  };
+};
+const receiveCompany = (data) => {
   return {
     type: COMPANY_SUCCESS,
-    payload: {data},
-  }
-}
-const companyError = () =>{
+    payload: { data },
+  };
+};
+const companyError = () => {
   return {
     type: COMPANY_FAILURE,
-  }
-}
+  };
+};
 
 const err = "user doesn't exist on this role!";
 export const loginUser = (email, password, role) => (dispatch) => {
@@ -349,6 +349,7 @@ export const loginUser = (email, password, role) => (dispatch) => {
       const newRole = filtered[0][1]?.role;
       const isBlocked = filtered[0][1]?.blocked;
       const isVerified = filtered[0][1]?.verified;
+      const userName = filtered[0][1]?.userName;
       if (isBlocked) {
         return dispatch(loginError("You have been blocked by The Admin"));
       }
@@ -360,7 +361,7 @@ export const loginUser = (email, password, role) => (dispatch) => {
         Firebase.auth()
           .signInWithEmailAndPassword(email, password)
           .then((user) => {
-            dispatch(receiveLogin(user, role));
+            dispatch(receiveLogin(user, role, userName));
           })
           .catch((error) => {
             dispatch(loginError(error.message));
@@ -388,30 +389,48 @@ export const logoutUser = () => (dispatch) => {
 
 export const signupUser = (userName, email, password, role) => (dispatch) => {
   dispatch(requestSignup());
-  Firebase.auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((user) => {
-      let UID = Firebase.auth().currentUser?.uid;
-      Firebase.database().ref(`/Users/${UID}`).set({
-        uid: UID,
-        userName: userName,
-        email: email,
-        password: password,
-        role: role,
-        blocked: false,
-        verified: false,
+  let id = 0;
+  Firebase.database()
+    .ref("Users/")
+    .orderByChild("id")
+    .limitToLast(1)
+    .on(`value`, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        id += data.id;
       });
-      dispatch(receiveSignup(user, role));
-    })
+      Firebase.auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          let UID = Firebase.auth().currentUser?.uid;
 
-    .catch((error) => {
-      dispatch(signupError(error.message));
+          Firebase.database()
+            .ref(`/Users/${UID}`)
+            .set({
+              uid: UID,
+              userName: userName,
+              email: email,
+              password: password,
+              role: role,
+              blocked: false,
+              verified: false,
+              id: id + 1,
+            });
+
+          dispatch(receiveSignup());
+        })
+
+        .catch((error) => {
+          dispatch(signupError(error.message));
+        });
+      Firebase.auth().signOut();
     });
 };
 
 export const verifyAuth = () => (dispatch) => {
   dispatch(verifyRequest());
   Firebase.auth().onAuthStateChanged((user) => {
+    console.log("ser?.", user?.email);
     if (user !== null) {
       dispatch(requestLogin());
       Firebase.database()
@@ -426,7 +445,6 @@ export const verifyAuth = () => (dispatch) => {
                 dispatch(receiveLogout());
               });
           } else {
-            
             dispatch(receiveLogin(user, role));
           }
         });
@@ -517,7 +535,6 @@ export const studentJob = (uid, key) => (dispatch) => {
     .then(() => {
       Firebase.database().ref(`/Jobs/${key}`).update(updates1);
       dispatch(receiveAddJob());
-      
     })
     .catch((err) => {
       dispatch(studentJobError());
@@ -566,7 +583,7 @@ export const getAllUsers = () => (dispatch) => {
       `value`,
       (snapshot) => {
         const data = snapshot.val();
-      
+
         const newdata = Object.values(data);
         dispatch(receiveAllUsers(newdata));
       },
@@ -655,7 +672,7 @@ export const openingDrawer = (bool) => (dispatch) => {
   dispatch(drawerBool(bool));
 };
 
-export const getAllStudent = () => (dispatch) =>{
+export const getAllStudent = () => (dispatch) => {
   dispatch(requestStudent());
   Firebase.database()
     .ref(`Users/`)
@@ -672,8 +689,8 @@ export const getAllStudent = () => (dispatch) =>{
         dispatch(studentError());
       }
     );
-}
-export const getAllCompany = () => (dispatch) =>{
+};
+export const getAllCompany = () => (dispatch) => {
   dispatch(requestCompany());
   Firebase.database()
     .ref(`Users/`)
@@ -690,4 +707,4 @@ export const getAllCompany = () => (dispatch) =>{
         dispatch(companyError());
       }
     );
-}
+};

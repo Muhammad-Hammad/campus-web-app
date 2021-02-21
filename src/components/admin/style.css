@@ -10,3 +10,6 @@
 .MuiDataGrid-colCellCenter {
   text-align: center !important;
 }
+button:focus {
+  outline: none;
+}

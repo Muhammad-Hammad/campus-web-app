@@ -40,6 +40,7 @@ function Dashboard({ routes }) {
         {/* <Link to="/dashboard/addjob">addjob</Link>
       <Link to="/dashboard/showjob">showjob</Link> */}
         <Box display="flex" justifyContent="center" m={1} p={1}>
+          {console.log("userName", userName)}
           {role === "Company" ? (
             <Box p={1}>
               <Button

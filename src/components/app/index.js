@@ -18,7 +18,7 @@ function App() {
     userName,
     drawer,
   } = state;
- 
+  console.log("USER", user);
   let check = Object.keys(user).length === 0 && user.constructor === Object;
   if (verify.verifying || login.loading) {
     return <Loader size={300} />;

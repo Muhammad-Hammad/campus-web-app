@@ -158,7 +158,7 @@ const initState = {
   userName: "",
   Jobs: [],
   AllJobs: [],
-  AllCompany:[],
+  AllCompany: [],
   AllStudent: [],
   drawer: false,
 };
@@ -252,6 +252,7 @@ export default function Auth(state = initState, action) {
           loading: true,
           error: false,
           success: false,
+          errorMsg: "",
         },
       };
     case SIGNUP_SUCCESS:
@@ -261,9 +262,11 @@ export default function Auth(state = initState, action) {
           loading: false,
           error: false,
           success: true,
+          errorMsg: "",
         },
-        user: action?.payload?.user,
-        role: action?.payload?.role,
+        // user: action?.payload?.user,
+        // role: action?.payload?.role,
+        // userName: action?.payload?.userName,
       };
     case SIGNUP_FAILURE:
       return {
@@ -641,7 +644,7 @@ export default function Auth(state = initState, action) {
         drawer: action?.payload?.bool,
       };
     }
-    case STUDENT_REQUEST:{
+    case STUDENT_REQUEST: {
       return {
         ...state,
         Student: {
@@ -649,65 +652,65 @@ export default function Auth(state = initState, action) {
           error: false,
           success: false,
           errorMsg: "",
-        }
-      }
+        },
+      };
     }
-    case STUDENT_SUCCESS:{
+    case STUDENT_SUCCESS: {
       return {
         ...state,
-        Student:{
+        Student: {
           loading: false,
           error: false,
           success: true,
           errorMsg: "",
         },
-        AllStudent: [action?.payload?.data]
-      }
+        AllStudent: [action?.payload?.data],
+      };
     }
-    case STUDENT_FAILURE:{
+    case STUDENT_FAILURE: {
       return {
         ...state,
-        Student:{
+        Student: {
           loading: false,
           error: true,
           success: false,
           errorMsg: "",
-        }
-      }
+        },
+      };
     }
-    case COMPANY_REQUEST:{
-      return{
+    case COMPANY_REQUEST: {
+      return {
         ...state,
-        Company:{
+        Company: {
           loading: true,
           error: false,
           success: false,
           errorMsg: "",
-        }
-      }
+        },
+      };
     }
-    case COMPANY_SUCCESS:{
-      return{
+    case COMPANY_SUCCESS: {
+      return {
         ...state,
-        Company:{
+        Company: {
           loading: false,
           error: false,
           success: true,
           errorMsg: "",
         },
-        AllCompany: [action?.payload?.data]
-      }
+        AllCompany: [action?.payload?.data],
+      };
     }
-    case COMPANY_FAILURE:{
-      return{
+    case COMPANY_FAILURE: {
+      return {
         ...state,
-        Company:{
+        Company: {
           loading: false,
           error: true,
           success: false,
           errorMsg: "",
-        }
-      }
+        },
+      };
     }
     default:
       return state;

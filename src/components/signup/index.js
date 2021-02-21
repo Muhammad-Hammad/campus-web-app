@@ -78,8 +78,10 @@ export default function SignUp() {
     });
   };
 
-  if (signup.success || login.success) {
+  if (login.success) {
     return <Redirect to={`/dashboard`} />;
+  } else if (signup.success) {
+    return <Redirect to={`/`} />;
   } else {
     return (
       <Container component="main" maxWidth="xs">
@@ -205,7 +207,7 @@ export default function SignUp() {
                   className={classes.submit}
                   disabled={!dirty}
                 >
-                  {!signup.loading ? "Sign Up" : <Loading size={24} />}
+                  {!signup.loading ? "Sign Up" : <Loading size={20} />}
                 </Button>
                 <Grid container justify="flex-end">
                   <Grid item>

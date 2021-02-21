@@ -70,7 +70,7 @@ function Signin() {
 
   const { login, signup, userName, getData } = state;
   const classes = useStyles();
-  if (login.success || signup.success) {
+  if (login.success) {
     return <Redirect to={`/dashboard`} />;
   } else {
     // debugger;
@@ -146,7 +146,7 @@ function Signin() {
                   // </Typography>
                   <Alert severity="error">{login.errorMsg}</Alert>
                 )}
-                <br/>
+                <br />
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Role</FormLabel>
                   <RadioGroup
